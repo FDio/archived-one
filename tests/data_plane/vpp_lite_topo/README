@@ -1,0 +1,15 @@
+# Test require program expect
+ - install expect
+ aptitude install expect
+
+Please before use, set variable VPP_LITE_BIN to your vpp_lite in file lisp_test.sh
+
+# example use
+# Test ip4 topology
+./lisp_test.sh or ./lisp_test ip4
+
+# Test ip6 topology
+./lisp_test ip6
+
+# Test ip4 and ip6 topology
+./lisp_test all
