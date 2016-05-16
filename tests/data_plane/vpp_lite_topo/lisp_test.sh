@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+if [ "$1" == "-h" ] || [ "$1" == "-help" ] ; then
+  echo "lisp_test.sh [ip4] [ip6] [ip4_ip6] [4o6] [6o4]"
+  echo "        ip4 - test ip4 topology"
+  echo "        ip6 - test ip6 topology"
+  echo "        ip4_ip6 - test ip4 and ip6 topology"
+  echo "        4o6 - test ip4 over ip6"
+  echo "        6o4 - test ip6 over ip4"
+  exit 0
+fi
+
 set -x
 
 # path to vpp executable and configurations folder
@@ -10,16 +20,28 @@ VPP1_CONF="vpp1.conf"
 VPP2_CONF="vpp2.conf"
 ODL_CONFIG_DIR="../configs/odl/"
 ODL_ADD_CONFIG1="add_ipv4_odl1.txt"
+ODL_ADD_CONFIG1_4o6="add_ipv4o6_odl1.txt"
 ODL_ADD_CONFIG1_6="add_ipv6_odl1.txt"
+ODL_ADD_CONFIG1_6o4="add_ipv6o4_odl1.txt"
 ODL_ADD_CONFIG2="add_ipv4_odl2.txt"
+ODL_ADD_CONFIG2_4o6="add_ipv4o6_odl2.txt"
 ODL_ADD_CONFIG2_6="add_ipv6_odl2.txt"
+ODL_ADD_CONFIG2_6o4="add_ipv6o4_odl2.txt"
 ODL_REPLACE_CONFIG2="replace_ipv4_odl2.txt"
+ODL_REPLACE_CONFIG2_4o6="replace_ipv4o6_odl2.txt"
 ODL_REPLACE_CONFIG2_6="replace_ipv6_odl2.txt"
+ODL_REPLACE_CONFIG2_6o4="replace_ipv6o4_odl2.txt"
 
 ODL_USER="admin"
 ODL_PASSWD="admin"
 ODL_IP="127.0.0.1"
 ODL_PORT="8181"
+
+function post_curl {
+  curl -X POST http://${ODL_IP}:${ODL_PORT}/restconf/operations/odl-mappingservice:${1} \
+     -H "Content-Type: application/json" --data-binary "@${ODL_CONFIG_DIR}${2}" \
+     -u ${ODL_USER}:${ODL_PASSWD}
+}
 
 # make sure there are no vpp instances running
 sudo pkill vpp
@@ -35,6 +57,9 @@ sudo ip link del dev veth_odl &> /dev/null
 sudo ip netns del vppns1 &> /dev/null
 sudo ip netns del vppns2 &> /dev/null
 sudo ip netns del intervppns &> /dev/null
+
+curl -X DELETE http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database/ \
+     -u ${ODL_USER}:${ODL_PASSWD}
 
 if [ "$1" == "clean" ] ; then
   exit 0;
@@ -83,9 +108,19 @@ if [ "$1" == "ip6" ] ; then
   VPP2_CONF="vpp2_6.conf"
 fi
 
-if [ "$1" == "all" ] ; then
+if [ "$1" == "ip4_ip6" ] ; then
   VPP1_CONF="vpp1_ip4_6.conf"
   VPP2_CONF="vpp2_ip4_6.conf"
+fi
+
+if [ "$1" == "4o6" ] ; then
+  VPP1_CONF="vpp1_4o6.conf"
+  VPP2_CONF="vpp2_4o6.conf"
+fi
+
+if [ "$1" == "6o4" ] ; then
+  VPP1_CONF="vpp1_6o4.conf"
+  VPP2_CONF="vpp2_6o4.conf"
 fi
 
 # start vpp1 and vpp2 in separate chroot
@@ -110,7 +145,7 @@ if [ "$1" == "ip6" ] ; then
   source lisp_ip6.sh
 fi
 
-if [ "$1" == "all" ] ; then
+if [ "$1" == "ip4_ip6" ] ; then
   source lisp_ip4.sh
   source lisp_ip6.sh
 
@@ -118,5 +153,12 @@ if [ "$1" == "all" ] ; then
   ping_lisp6
 fi
 
-echo "Success"
+if [ "$1" == "4o6" ] ; then
+  source lisp_ip4o6.sh
+fi
 
+if [ "$1" == "6o4" ] ; then
+  source lisp_ip6o4.sh
+fi
+
+echo "Success"

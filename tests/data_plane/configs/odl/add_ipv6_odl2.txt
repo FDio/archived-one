@@ -6,7 +6,7 @@
             "authoritative": true,
             "eid": {
                 "address-type": "ietf-lisp-address-types:ipv6-prefix-afi",
-                "ipv6-prefix": "6:0:2::0/48"
+                "ipv6-prefix": "6:0:2::0/64"
             },
             "LocatorRecord": [
                 {

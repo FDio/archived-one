@@ -6,7 +6,7 @@
             "authoritative": true,
             "eid": {
                 "address-type": "ietf-lisp-address-types:ipv6-prefix-afi",
-                "ipv6-prefix": "6:0:1::0/64"
+                "ipv6-prefix": "6:0:2::0/64"
             },
             "LocatorRecord": [
                 {
@@ -19,8 +19,8 @@
                     "rlocProbed": false,
                     "routed": true,
                     "rloc": {
-                        "address-type": "ietf-lisp-address-types:ipv6-afi",
-                        "ipv6": "6:0:3::1"
+                        "address-type": "ietf-lisp-address-types:ipv4-afi",
+                        "ipv4": "6.0.3.2"
                     }
                 }
             ]

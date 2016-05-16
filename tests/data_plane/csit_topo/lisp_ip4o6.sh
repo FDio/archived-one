@@ -11,11 +11,11 @@ function ping_lisp {
   fi
 }
 
-post_curl "add-mapping" ${ODL_ADD_CONFIG1}
-post_curl "add-mapping" ${ODL_ADD_CONFIG2}
+post_curl "add-mapping" ${ODL_ADD_CONFIG1_4o6}
+post_curl "add-mapping" ${ODL_ADD_CONFIG2_4o6}
 
-rsync -avz ${VPP_CONFIG_DIR}${VPP_CONFIG1} ${USER}@${VPP1_IP}:${TMP_DIR}/vpp1.conf
-rsync -avz ${VPP_CONFIG_DIR}${VPP_CONFIG2} ${USER}@${VPP2_IP}:${TMP_DIR}/vpp2.conf
+rsync -avz ${VPP_CONFIG_DIR}${VPP_CONFIG1_4o6} ${USER}@${VPP1_IP}:${TMP_DIR}/vpp1.conf
+rsync -avz ${VPP_CONFIG_DIR}${VPP_CONFIG2_4o6} ${USER}@${VPP2_IP}:${TMP_DIR}/vpp2.conf
 
 ssh_vpp1 "sudo vpp_api_test < ${TMP_DIR}/vpp1.conf"
 ssh_vpp2 "sudo vpp_api_test < ${TMP_DIR}/vpp2.conf"
@@ -30,10 +30,10 @@ ssh_tg "sudo ip netns exec net2 ip route add 6.0.1.0/24 via 6.0.2.1"
 
 ping_lisp
 
-rsync -avz ${VPP_CONFIG_DIR}${VPP_RECONF2}  ${USER}@${VPP2_IP}:${TMP_DIR}/vpp2_reconf.conf
+rsync -avz ${VPP_CONFIG_DIR}${VPP_RECONF2_4o6}  ${USER}@${VPP2_IP}:${TMP_DIR}/vpp2_reconf.conf
 
 ssh_vpp2 "sudo vpp_api_test < ${TMP_DIR}/vpp2_reconf.conf"
 
-post_curl "update-mapping" ${ODL_REPLACE_CONFIG2}
+post_curl "update-mapping" ${ODL_REPLACE_CONFIG2_4o6}
 
 ping_lisp

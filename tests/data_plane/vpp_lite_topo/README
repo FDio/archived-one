@@ -12,4 +12,10 @@ Please before use, set variable VPP_LITE_BIN to your vpp_lite in file lisp_test.
 ./lisp_test ip6
 
 # Test ip4 and ip6 topology
-./lisp_test all
+./lisp_test ip4_ip6
+
+# Test ip4 over ip6
+./lisp_test 4o6
+
+# Test ip6 over ip4
+./lisp_test 6o4

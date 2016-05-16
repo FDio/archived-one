@@ -19,8 +19,8 @@
                     "rlocProbed": false,
                     "routed": true,
                     "rloc": {
-                        "address-type": "ietf-lisp-address-types:ipv6-afi",
-                        "ipv6": "6:0:3::1"
+                        "address-type": "ietf-lisp-address-types:ipv4-afi",
+                        "ipv4": "6.0.3.1"
                     }
                 }
             ]
