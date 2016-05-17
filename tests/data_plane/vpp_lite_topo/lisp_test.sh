@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
 if [ "$1" == "-h" ] || [ "$1" == "-help" ] ; then
-  echo "lisp_test.sh [ip4] [ip6] [ip4_ip6] [4o6] [6o4]"
+  echo "lisp_test.sh [ip4] [ip6] [ip4_ip6] [4o6] [6o4] [remote] [remote6]"
   echo "        ip4 - test ip4 topology"
   echo "        ip6 - test ip6 topology"
   echo "        ip4_ip6 - test ip4 and ip6 topology"
   echo "        4o6 - test ip4 over ip6"
   echo "        6o4 - test ip6 over ip4"
+  echo "        remote - test statick mapping, whit out ODL"
+  echo "        remote6 - test statick mapping for IPv6, whit out ODL"
   exit 0
 fi
 
@@ -58,8 +60,10 @@ sudo ip netns del vppns1 &> /dev/null
 sudo ip netns del vppns2 &> /dev/null
 sudo ip netns del intervppns &> /dev/null
 
-curl -X DELETE http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database/ \
-     -u ${ODL_USER}:${ODL_PASSWD}
+if [ "$1" != "remote" ] && [ "$1" != "remote6" ]  ; then
+  curl -X DELETE http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database/ \
+       -u ${ODL_USER}:${ODL_PASSWD}
+fi
 
 if [ "$1" == "clean" ] ; then
   exit 0;
@@ -123,6 +127,16 @@ if [ "$1" == "6o4" ] ; then
   VPP2_CONF="vpp2_6o4.conf"
 fi
 
+if [ "$1" == "remote" ] ; then
+  VPP1_CONF="vpp1_remote.conf"
+  VPP2_CONF="vpp2_remote.conf"
+fi
+
+if [ "$1" == "remote6" ] ; then
+  VPP1_CONF="vpp1_6_remote.conf"
+  VPP2_CONF="vpp2_6_remote.conf"
+fi
+
 # start vpp1 and vpp2 in separate chroot
 sudo $VPP_LITE_BIN                              \
   unix { log /tmp/vpp1.log cli-listen           \
@@ -159,6 +173,14 @@ fi
 
 if [ "$1" == "6o4" ] ; then
   source lisp_ip6o4.sh
+fi
+
+if [ "$1" == "remote" ] ; then
+  source lisp_remote_mapping.sh
+fi
+
+if [ "$1" == "remote6" ] ; then
+  source lisp_6_remote_mapping.sh
 fi
 
 echo "Success"

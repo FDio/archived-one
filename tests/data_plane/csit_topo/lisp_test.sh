@@ -19,12 +19,14 @@
 #         +------+
 
 if [ "$1" == "-h" ] || [ "$1" == "-help" ] ; then
-  echo "lisp_test.sh [ip4] [ip6] [ip4_ip6] [4o6] [6o4]"
+  echo "lisp_test.sh [ip4] [ip6] [ip4_ip6] [4o6] [6o4] [remote] [remote6]"
   echo "        ip4 - test ip4 topology"
   echo "        ip6 - test ip6 topology"
   echo "        ip4_ip6 - test ip4 and ip6 topology"
   echo "        4o6 - test ip4 over ip6"
   echo "        6o4 - test ip6 over ip4"
+  echo "        remote - test statick mapping, whit out ODL"
+  echo "        remote6 - test statick mapping for IPv6, whit out ODL"
   exit 0
 fi
 
@@ -45,30 +47,50 @@ ODL_M_USER="user"
 ODL_INT="eth2"
 VPP_CONFIG_DIR="../configs/vpp_csit_config/"
 VPP_CONFIG1="vpp1.conf"
-VPP_CONFIG1_4o6="vpp1_4o6.conf"
 VPP_CONFIG1_6="vpp1_6.conf"
-VPP_CONFIG1_6o4="vpp1_6o4.conf"
 VPP_CONFIG2="vpp2.conf"
-VPP_CONFIG2_4o6="vpp2_4o6.conf"
 VPP_CONFIG2_6="vpp2_6.conf"
-VPP_CONFIG2_6o4="vpp2_6o4.conf"
 VPP_RECONF2="vpp2_reconf.conf"
 VPP_RECONF2_6="vpp2_reconf_6.conf"
-VPP_RECONF2_4o6="vpp2_reconf_4o6.conf"
-VPP_RECONF2_6o4="vpp2_reconf_6o4.conf"
 ODL_CONFIG_DIR="../configs/odl/"
 ODL_ADD_CONFIG1="add_ipv4_odl1.txt"
-ODL_ADD_CONFIG1_4o6="add_ipv4o6_odl1.txt"
 ODL_ADD_CONFIG1_6="add_ipv6_odl1.txt"
-ODL_ADD_CONFIG1_6o4="add_ipv6o4_odl1.txt"
 ODL_ADD_CONFIG2="add_ipv4_odl2.txt"
-ODL_ADD_CONFIG2_4o6="add_ipv4o6_odl2.txt"
 ODL_ADD_CONFIG2_6="add_ipv6_odl2.txt"
-ODL_ADD_CONFIG2_6o4="add_ipv6o4_odl2.txt"
 ODL_REPLACE_CONFIG2="replace_ipv4_odl2.txt"
 ODL_REPLACE_CONFIG2_6="replace_ipv6_odl2.txt"
-ODL_REPLACE_CONFIG2_4o6="replace_ipv4o6_odl2.txt"
-ODL_REPLACE_CONFIG2_6o4="replace_ipv6o4_odl2.txt"
+
+if [ "$1" == "remote" ] ; then
+  VPP_CONFIG1="vpp1_remote.conf"
+  VPP_CONFIG2="vpp2_remote.conf"
+  VPP_RECONF1="vpp1_reconf_remote.conf"
+  VPP_RECONF2="vpp2_reconf.conf"
+fi
+
+if [ "$1" == "remote6" ] ; then
+  VPP_CONFIG1="vpp1_6_remote.conf"
+  VPP_CONFIG2="vpp2_6_remote.conf"
+  VPP_RECONF1="vpp1_6_reconf_remote.conf"
+  VPP_RECONF2="vpp2_reconf_6.conf"
+fi
+
+if [ "$1" == "4o6" ] ; then
+  VPP_CONFIG1="vpp1_4o6.conf"
+  VPP_CONFIG2="vpp2_4o6.conf"
+  VPP_RECONF2="vpp2_reconf_4o6.conf"
+  ODL_ADD_CONFIG1="add_ipv4o6_odl1.txt"
+  ODL_ADD_CONFIG2="add_ipv4o6_odl2.txt"
+  ODL_REPLACE_CONFIG2="replace_ipv4o6_odl2.txt"
+fi
+
+if [ "$1" == "6o4" ] ; then
+  VPP_CONFIG1="vpp1_6o4.conf"
+  VPP_CONFIG2="vpp2_6o4.conf"
+  VPP_RECONF2="vpp2_reconf_6o4.conf"
+  ODL_ADD_CONFIG1="add_ipv6o4_odl1.txt"
+  ODL_ADD_CONFIG2="add_ipv6o4_odl2.txt"
+  ODL_REPLACE_CONFIG2="replace_ipv6o4_odl2.txt"
+fi
 
 function ssh_vpp1 {
     ssh ${USER}@${VPP1_IP} ${@} || exit
@@ -92,8 +114,10 @@ function post_curl {
      -u ${ODL_USER}:${ODL_PASSWD}
 }
 
-curl -X DELETE http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database/ \
-     -u ${ODL_USER}:${ODL_PASSWD}
+if [ "$1" != "remote" ] && [ "$1" != "remote6" ]  ; then
+  curl -X DELETE http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database/ \
+       -u ${ODL_USER}:${ODL_PASSWD}
+fi
 
 ssh_tg "sudo ip netns del net2 &> /dev/null || exit 0"
 ssh_tg "sudo ip addr flush dev ${TG_INT1} &> /dev/null || exit 0"
@@ -140,6 +164,14 @@ if [ "$1" == "ip4_ip6" ] ; then
 
   ping_lisp
   ping_lisp6
+fi
+
+if [ "$1" == "remote" ] ; then
+  source lisp_remote.sh
+fi
+
+if [ "$1" == "remote6" ] ; then
+  source lisp_6_remote.sh
 fi
 
 #clean tmp file
