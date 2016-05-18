@@ -69,6 +69,8 @@ if [ "$1" == "clean" ] ; then
   exit 0;
 fi
 
+sleep 1
+
 # create vpp to clients and inter-vpp namespaces
 sudo ip netns add vppns1
 sudo ip netns add vppns2
