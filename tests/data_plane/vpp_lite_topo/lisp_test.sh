@@ -7,16 +7,13 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ] ; then
   echo "        ip4_ip6 - test ip4 and ip6 topology"
   echo "        4o6 - test ip4 over ip6"
   echo "        6o4 - test ip6 over ip4"
-  echo "        remote - test statick mapping, whit out ODL"
-  echo "        remote6 - test statick mapping for IPv6, whit out ODL"
+  echo "        remote - test static mapping, without ODL"
+  echo "        remote6 - test static mapping for IPv6, without ODL"
   exit 0
 fi
 
 set -x
 
-# path to vpp executable and configurations folder
-# VPP_LITE_BIN=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
-VPP_LITE_BIN=/home/csit/lisp_vpp/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
 VPP_LITE_CONF=`pwd`"/../configs/vpp_lite_config/"
 VPP1_CONF="vpp1.conf"
 VPP2_CONF="vpp2.conf"
@@ -34,16 +31,8 @@ ODL_REPLACE_CONFIG2_4o6="replace_ipv4o6_odl2.txt"
 ODL_REPLACE_CONFIG2_6="replace_ipv6_odl2.txt"
 ODL_REPLACE_CONFIG2_6o4="replace_ipv6o4_odl2.txt"
 
-ODL_USER="admin"
-ODL_PASSWD="admin"
-ODL_IP="127.0.0.1"
-ODL_PORT="8181"
-
-function post_curl {
-  curl -X POST http://${ODL_IP}:${ODL_PORT}/restconf/operations/odl-mappingservice:${1} \
-     -H "Content-Type: application/json" --data-binary "@${ODL_CONFIG_DIR}${2}" \
-     -u ${ODL_USER}:${ODL_PASSWD}
-}
+source config.sh
+source odl_utils.sh
 
 # make sure there are no vpp instances running
 sudo pkill vpp
@@ -61,8 +50,7 @@ sudo ip netns del vppns2 &> /dev/null
 sudo ip netns del intervppns &> /dev/null
 
 if [ "$1" != "remote" ] && [ "$1" != "remote6" ]  ; then
-  curl -X DELETE http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database/ \
-       -u ${ODL_USER}:${ODL_PASSWD}
+  odl_clear_all
 fi
 
 if [ "$1" == "clean" ] ; then
