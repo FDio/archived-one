@@ -2,7 +2,9 @@
 
 function rtr_single_iface_clean {
   echo "Clearing all VPP instances.."
-  pkill vpp
+  pkill vpp --signal 9
+  
+  rm /dev/shm/*
 
   echo "Cleaning RTR topology.."
   ip netns exec xtr-rtr-ns ifconfig vppbr1 down
@@ -77,19 +79,19 @@ function rtr_single_iface_setup {
     unix { log /tmp/vpp1.log cli-listen \
            localhost:5002 full-coredump \
            exec ${VPP_LITE_CONF}/vpp1.config } \
-    api-trace { on } chroot {prefix xtr1}
+    api-trace { on } api-segment {prefix xtr1}
 
   ${VPP_LITE_BIN} \
     unix { log /tmp/vpp2.log cli-listen \
            localhost:5003 full-coredump \
            exec ${VPP_LITE_CONF}/vpp2.config } \
-    api-trace { on } chroot {prefix xtr2}
+    api-trace { on } api-segment {prefix xtr2}
 
    ${VPP_LITE_BIN} \
     unix { log /tmp/rtr.log cli-listen \
            localhost:5004 full-coredump \
            exec ${VPP_LITE_CONF}/rtr.config } \
-    api-trace { on } chroot {prefix rtr}
+    api-trace { on } api-segment {prefix rtr}
 
   post_curl "add-mapping" ${ODL_CONFIG_FILE1}
   post_curl "add-mapping" ${ODL_CONFIG_FILE2}

@@ -132,13 +132,13 @@ sudo $VPP_LITE_BIN                              \
   unix { log /tmp/vpp1.log cli-listen           \
          localhost:5002 full-coredump           \
          exec $VPP_LITE_CONF/${VPP1_CONF} }     \
-         api-trace { on } chroot {prefix xtr1}
+         api-trace { on } api-segment {prefix xtr1}
 
 sudo $VPP_LITE_BIN                              \
   unix { log /tmp/vpp2.log cli-listen           \
          localhost:5003 full-coredump           \
          exec $VPP_LITE_CONF/${VPP2_CONF}}      \
-         api-trace { on } chroot {prefix xtr2}
+         api-trace { on } api-segment {prefix xtr2}
 
 
 if [ "$#" == 0 ] || [ "$1" == "ip4" ] ; then
