@@ -13,7 +13,7 @@
 #
 
 VPP_LITE_CONF=`pwd`"/../configs/vpp_lite_config/rtr_single_iface/4o6/"
-ODL_CONFIG_DIR=`pwd`"/../configs/odl/rtr_single_iface/4o6/"
+ODL_CONFIG_DIR=`pwd`"/../configs/odl/rtr_single_iface/4o6"
 
 source test_driver/rtr_single_iface.sh
 
