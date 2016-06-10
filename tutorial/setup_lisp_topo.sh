@@ -75,14 +75,14 @@ ifconfig odl 6.0.3.100/24
 ethtool --offload  odl rx off tx off
 
 # start vpp1 and vpp2 in separate chroot
-sudo $VPP_LITE_BIN                              \
-  unix { log /tmp/vpp1.log cli-listen           \
-         localhost:5002 full-coredump           \
-         exec $VPP_LITE_CONF/vpp1.conf }        \
-         api-trace { on } chroot {prefix xtr1}
+sudo $VPP_LITE_BIN                                  \
+  unix { log /tmp/vpp1.log cli-listen               \
+         localhost:5002 full-coredump               \
+         exec $VPP_LITE_CONF/vpp1.conf }            \
+         api-trace { on } api-segment {prefix xtr1}
 
-sudo $VPP_LITE_BIN                              \
-  unix { log /tmp/vpp2.log cli-listen           \
-         localhost:5003 full-coredump           \
-         exec $VPP_LITE_CONF/vpp2.conf}         \
-         api-trace { on } chroot {prefix xtr2}
+sudo $VPP_LITE_BIN                                  \
+  unix { log /tmp/vpp2.log cli-listen               \
+         localhost:5003 full-coredump               \
+         exec $VPP_LITE_CONF/vpp2.conf}             \
+         api-trace { on } api-segment {prefix xtr2}
