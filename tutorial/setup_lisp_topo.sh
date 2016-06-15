@@ -1,5 +1,19 @@
+#!/usr/bin/env bash
+
+if [ $USER != "root" ] ; then
+    echo "Restarting script with sudo..."
+    sudo $0 ${*}
+    exit
+fi
+
+
+SRC=${1:-/vpp}
+[ $# -eq 0 ] && { echo "(using default vpp src $SRC. This can be passed as parameter to script)"; }
+
 # path to vpp executable and configurations folder
-VPP_LITE_BIN=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
+[ -f $SRC/build-root/install-vpp_lite_debug-native/vpp/bin/vpp ] || { echo "VPP lite not found, build it by 'cd $SRC; PLATFORM=vpp_lite make build'"; exit 1; }
+
+VPP_LITE_BIN=$SRC/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
 VPP_LITE_CONF=/etc/vpp/lite/
 
 # make sure there are no vpp instances running
