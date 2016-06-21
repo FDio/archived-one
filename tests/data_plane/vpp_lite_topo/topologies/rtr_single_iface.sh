@@ -3,7 +3,7 @@
 function rtr_single_iface_clean {
   echo "Clearing all VPP instances.."
   pkill vpp --signal 9
-  
+
   rm /dev/shm/*
 
   echo "Cleaning RTR topology.."
@@ -57,7 +57,9 @@ function rtr_single_iface_setup {
     bash -c "
       ip link set dev lo up
       ip addr add 6.0.2.2/24 dev veth_vpp1
+      ip addr add 6:0:2::2/64 dev veth_vpp1
       ip route add 6.0.4.0/24 via 6.0.2.1
+      ip route add 6:0:4::0/64 via 6:0:2::1
   "
 
   ip link add veth_vpp2 type veth peer name vpp2
@@ -68,7 +70,9 @@ function rtr_single_iface_setup {
     bash -c "
       ip link set dev lo up
       ip addr add 6.0.4.4/24 dev veth_vpp2
+      ip addr add 6:0:4::4/64 dev veth_vpp2
       ip route add 6.0.2.0/24 via 6.0.4.1
+      ip route add 6:0:2::0/64 via 6:0:4::1
   "
 
   ip addr add 6.0.3.100/24 dev odl

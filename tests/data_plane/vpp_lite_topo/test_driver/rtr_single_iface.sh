@@ -22,7 +22,7 @@ function test_rtr_single_iface {
 
   test_result=1
 
-  ip netns exec vpp-ns1 ping -w 15 -c 1 "${1}"
+  ip netns exec vpp-ns1 "${1}" -w 15 -c 1 "${2}"
   rc=$?
 
   rtr_single_iface_clean
