@@ -17,7 +17,7 @@ function smr_rtr_disjoint_clean {
   ip link del dev rtr1_vpp1 &> /dev/null
   ip link del dev vpp2_rtr &> /dev/null
   ip link del dev rtr_vpp2 &> /dev/null
-  ip link del dev odl_vpp1 &> /dev/null
+  ip link del dev odl_wan4 &> /dev/null
   ip link del dev odl_vpp2 &> /dev/null
 
   ip netns del vpp1-ns &> /dev/null
@@ -41,7 +41,7 @@ function smr_rtr_disjoint_setup {
   ip link add veth_vpp2_rtr type veth peer name vpp2_rtr
   ip link add veth_vpp2_wan4 type veth peer name vpp2_wan4
   ip link add veth_rtr_vpp2 type veth peer name rtr_vpp2
-  ip link add veth_odl_vpp1 type veth peer name odl_vpp1
+  ip link add veth_odl_wan4 type veth peer name odl_wan4
   ip link add veth_odl_vpp2 type veth peer name odl_vpp2
 
   # enable peer interfaces
@@ -50,7 +50,7 @@ function smr_rtr_disjoint_setup {
   ip link set dev vpp2_rtr up
   ip link set dev vpp2_wan4 up
   ip link set dev rtr_vpp2 up
-  ip link set dev odl_vpp1 up
+  ip link set dev odl_wan4 up
   ip link set dev odl_vpp2 up
 
   # enable veth interfaces and set them in the appropriate ip ns
@@ -59,7 +59,7 @@ function smr_rtr_disjoint_setup {
   ip link set dev veth_vpp2_rtr up netns vpp2-rtr-ns
   ip link set dev veth_vpp2_wan4 up netns wan4-ns
   ip link set dev veth_rtr_vpp2 up netns vpp2-rtr-ns
-  ip link set dev veth_odl_vpp1 up netns wan4-ns
+  ip link set dev veth_odl_wan4 up netns wan4-ns
   ip link set dev veth_odl_vpp2 up netns vpp2-rtr-ns
 
   # vpp1, rtr and odl
@@ -67,7 +67,7 @@ function smr_rtr_disjoint_setup {
   ip netns exec wan4-ns brctl addif vppbr1 veth_vpp1_wan4
   ip netns exec wan4-ns brctl addif vppbr1 veth_rtr_wan4
   ip netns exec wan4-ns brctl addif vppbr1 veth_vpp2_wan4
-  ip netns exec wan4-ns brctl addif vppbr1 veth_odl_vpp1
+  ip netns exec wan4-ns brctl addif vppbr1 veth_odl_wan4
   ip netns exec wan4-ns ifconfig vppbr1 up
 
   # vpp2, rtr and odl
@@ -106,9 +106,9 @@ function smr_rtr_disjoint_setup {
   "
 
   # vpp1 to odl
-  ip addr add 6.0.3.100/24 dev odl_vpp1
-  ip addr add 6:0:3::100/64 dev odl_vpp1
-  ethtool --offload  odl_vpp1 rx off tx off
+  ip addr add 6.0.3.100/24 dev odl_wan4
+  ip addr add 6:0:3::100/64 dev odl_wan4
+  ethtool --offload  odl_wan4 rx off tx off
 
   # vpp2 to odl
   ip addr add 6.0.5.100/24 dev odl_vpp2

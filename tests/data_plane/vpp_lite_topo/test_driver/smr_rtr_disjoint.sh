@@ -48,9 +48,9 @@ function test_smr_rtr_disjoint {
   rc=$?
 
   if [ $rc -ne 0 ] ; then
-    echo "Simple test failed: No ICMP response received within specified timeout limit!"
+    echo "IPv6 over IPv4 test failed: No ICMP response received within specified timeout limit!"
   else
-    echo "Simple test passed."
+    echo "IPv6 over IPv4 test passed."
     test_result=0
   fi
 
@@ -62,18 +62,18 @@ function test_smr_rtr_disjoint {
   smr_rtr_disjoint_reconfigure
 
   if [ "$2" == "wait" ] ; then
-    read -p  "Topology reconfigured press any key to continue .." -n1
+    read -p  "Forwarding reconfigured press any key to continue .." -n1
   fi
 
-  # TEST IP6 over disjoing IP4 and IP6 underlay
+  # TEST IP6 over disjoint IP4 and IP6 underlay
   test_ns_ping $1 vpp1-ns
 
   rc=$?
 
   if [ $rc -ne 0 ] ; then
-    echo "SMR+RTR test failed: No ICMP response received within specified timeout limit!"
+    echo "SMR + disjoint locators test failed: No ICMP response received within specified timeout limit!"
   else
-    echo "SMR+RTR test passed."
+    echo "SMR + disjoint locators test passed."
     test_result=0
   fi
 
