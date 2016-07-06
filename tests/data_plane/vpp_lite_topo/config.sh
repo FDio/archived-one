@@ -6,6 +6,11 @@ ODL_PORT="8181"
 # path to vpp executable
 VPP_LITE_BIN=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
 
+# read user config file if exists
+if [ -f "${HOME}/.onerc" ] ; then
+  source "${HOME}/.onerc"
+fi
+
 if [ ! -f "${VPP_LITE_BIN}" ] ; then
   echo "Error: VPP binary not found. You can set VPP_LITE_BIN in config.sh"
   echo "Current value:"
