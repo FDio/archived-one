@@ -16,4 +16,4 @@ ODL_CONFIG_DIR=`pwd`"/../configs/odl/rtr_two_iface/6o46"
 
 source test_driver/rtr_two_iface.sh
 
-test_rtr_two_iface "6:0:4::4" wait
+test_rtr_two_iface "6:0:4::4"

@@ -17,4 +17,4 @@ ODL_CONFIG_DIR=`pwd`"/../configs/odl/rtr_single_iface/4o6"
 
 source test_driver/rtr_single_iface.sh
 
-test_rtr_single_iface "6.0.4.4"
+test_rtr_single_iface ping "6.0.4.4"

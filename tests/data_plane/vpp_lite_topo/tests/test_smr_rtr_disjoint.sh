@@ -17,4 +17,4 @@ ODL_CONFIG_DIR=`pwd`"/../configs/odl/smr_rtr_disjoint/"
 
 source test_driver/smr_rtr_disjoint.sh
 
-test_smr_rtr_disjoint "6:0:4::4" wait
+test_smr_rtr_disjoint "6:0:4::4"

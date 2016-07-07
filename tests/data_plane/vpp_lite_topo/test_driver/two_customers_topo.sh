@@ -18,8 +18,6 @@ if [[ $(id -u) != 0 ]]; then
 fi
 
 function test_eid_virtualization {
-  two_customers_topo_clean
-  sleep 1
   two_customers_topo_setup
 
   # init to test failed
@@ -41,7 +39,7 @@ function test_eid_virtualization {
     echo "Error: customer 2 did not receive any response!"
   fi
 
-#  two_customers_topo_clean
+  two_customers_topo_clean
 
   if [ $rc -ne 0 ] ; then
     echo "Test failed!";
