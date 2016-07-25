@@ -23,7 +23,9 @@ function test_eid_virtualization {
   # init to test failed
   test_result=1
 
-  #read -p  "press any key to continue .." -n1
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
 
   ip netns exec vpp1-cus1-ns "${1}" -w 20 -c 1 "${2}"
   rc=$?
@@ -37,6 +39,10 @@ function test_eid_virtualization {
   rc=$?
   if [ $rc -ne 0 ] ; then
     echo "Error: customer 2 did not receive any response!"
+  fi
+
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
   fi
 
   two_customers_topo_clean

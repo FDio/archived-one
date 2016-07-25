@@ -22,6 +22,10 @@ function test_basic
     basic_topo_setup
   fi
 
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
+
   test_result=1
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
@@ -30,6 +34,10 @@ function test_basic
     echo "No response received!"
     basic_topo_clean
     exit $test_result
+  fi
+
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
   fi
 
   # change IP addresses of destination RLOC
@@ -43,6 +51,10 @@ function test_basic
   rc=$?
 
   # test done
+
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
 
   basic_topo_clean
   if [ $rc -ne 0 ] ; then

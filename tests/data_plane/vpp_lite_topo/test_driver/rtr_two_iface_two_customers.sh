@@ -24,6 +24,10 @@ function test_rtr_two_iface_two_customers {
   test_result=0
   rc=0
 
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
+
   ip netns exec vpp1-cus1-ns "${1}" -w 20 -c 1 "${2}"
   rc=$?
   if [ $rc -ne 0 ] ; then
@@ -36,6 +40,10 @@ function test_rtr_two_iface_two_customers {
   if [ $rc -ne 0 ] ; then
     echo "Error: customer 2 did not receive any response!"
     test_result=1
+  fi
+
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
   fi
 
   rtr_two_iface_two_customers_clean

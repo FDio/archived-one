@@ -27,6 +27,10 @@ function test_basic_multi_traffic
 
   test_result=1
 
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
+
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   if [ $? -ne 0 ] ; then
     echo "No response received!"
@@ -61,6 +65,10 @@ function test_basic_multi_traffic
 
   ip netns exec vppns1 "${3}" -w 15 -c 1 "${4}"
   rc=$?
+
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
 
   # test done
 

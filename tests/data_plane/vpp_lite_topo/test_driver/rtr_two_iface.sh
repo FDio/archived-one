@@ -28,10 +28,10 @@ function test_rtr_two_iface {
   rc=0
 
   if [ "$1" != "${1#*[0-9].[0-9]}" ]; then
-    ip netns exec vpp1-ns ping -w 15 -c 1 "${1}"
+    ip netns exec vpp1-ns ping -w 20 -c 1 "${1}"
     rc=$?
   elif [ "$1" != "${1#*:[0-9a-fA-F]}" ]; then
-    ip netns exec vpp1-ns ping6 -w 15 -c 1 "${1}"
+    ip netns exec vpp1-ns ping6 -w 20 -c 1 "${1}"
     rc=$?
   else
     echo "Unrecognized IP format '$1'"

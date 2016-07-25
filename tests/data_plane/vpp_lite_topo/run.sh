@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source config.sh
+source odl_utils.sh
+
 TESTS_DIR=tests
 
 function help
@@ -37,25 +40,39 @@ passed_num=0
 
 start_time=`date +%s`
 
+# check whether ODL is running
+if [ "`curl -X DELETE \
+  "http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database" \
+   -u ${ODL_USER}:${ODL_PASSWD} -s -o /dev/null -w "%{http_code}"`" != 200 ] ; then
+  echo "ODL is not running!"
+  exit 1
+fi
+
+# sudo?
+if [[ $(id -u) != 0 ]]; then
+  echo "Superuser privileges needed!"
+  exit 1
+fi
+
 # count tests
-test_num=`ls -l $TESTS_DIR/test_* | wc -l`
+test_num=`ls -l "$TESTS_DIR"/test_* | wc -l`
 
 echo
 echo "Running VPP lite test suite."
 echo
 
-for test_case in $TESTS_DIR/test_*
+for test_case in "$TESTS_DIR"/test_*
 do
   let "count=$count + 1"
 
   # run the test case
-  base_name=`basename -a $test_case`
-  printf "*** %d/%d : %-45s" $count $test_num $base_name
+  base_name=`basename -a "$test_case"`
+  printf "*** %2d/%d : %-45s" $count $test_num "$base_name"
 
   if [ $verbose -ne 0 ] ; then
-    $test_case
+    "$test_case"
   else
-    $test_case &> /dev/null
+    "$test_case" &> /dev/null
   fi
   rc=$?
 

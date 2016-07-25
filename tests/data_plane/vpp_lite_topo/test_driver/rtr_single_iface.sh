@@ -20,9 +20,13 @@ fi
 function test_rtr_single_iface {
   rtr_single_iface_setup
 
+  if [ "$3" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
+
   test_result=1
 
-  ip netns exec vpp-ns1 "${1}" -w 15 -c 1 "${2}"
+  ip netns exec vpp-ns1 "${1}" -w 20 -c 1 "${2}"
   rc=$?
 
   rtr_single_iface_clean
