@@ -48,8 +48,8 @@ function test_basic_multi_traffic
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp2 6.0.3.2/24" | nc 0 5003
   echo "set int ip address host-intervpp2 6.0.3.20/24" | nc 0 5003
-  echo "set int ip address del host-intervpp2 6:0:3::2/24" | nc 0 5003
-  echo "set int ip address host-intervpp2 6:0:3::20/24" | nc 0 5003
+  echo "set int ip address del host-intervpp2 6:0:3::2/64" | nc 0 5003
+  echo "set int ip address host-intervpp2 6:0:3::20/64" | nc 0 5003
 
   ODL_CONFIG_DIR=`pwd`/../configs/odl/basic/6o6
   post_curl "update-mapping" ${ODL_CONFIG_FILE3}

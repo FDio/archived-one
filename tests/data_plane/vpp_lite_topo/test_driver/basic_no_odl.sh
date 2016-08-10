@@ -32,11 +32,13 @@ function test_basic_no_odl
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp2 6.0.3.2/24" | nc 0 5003
   echo "set int ip address host-intervpp2 6.0.3.20/24" | nc 0 5003
-  echo "set int ip address del host-intervpp2 6:0:3::2/24" | nc 0 5003
-  echo "set int ip address host-intervpp2 6:0:3::20/24" | nc 0 5003
+  echo "set int ip address del host-intervpp2 6:0:3::2/64" | nc 0 5003
+  echo "set int ip address host-intervpp2 6:0:3::20/64" | nc 0 5003
 
   echo "lisp remote-mapping del vni 0 eid 6.0.2.0/24 rloc 6.0.3.2" | nc 0 5002
   echo "lisp remote-mapping add vni 0 eid 6.0.2.0/24 rloc 6.0.3.20" | nc 0 5002
+  echo "lisp remote-mapping del vni 0 eid 6:0:2::0/64 rloc 6:0:3::2" | nc 0 5002
+  echo "lisp remote-mapping add vni 0 eid 6:0:2::0/64 rloc 6:0:3::20" | nc 0 5002
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   rc=$?

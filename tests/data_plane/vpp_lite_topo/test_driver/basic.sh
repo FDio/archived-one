@@ -43,8 +43,8 @@ function test_basic
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp2 6.0.3.2/24" | nc 0 5003
   echo "set int ip address host-intervpp2 6.0.3.20/24" | nc 0 5003
-  echo "set int ip address del host-intervpp2 6:0:3::2/24" | nc 0 5003
-  echo "set int ip address host-intervpp2 6:0:3::20/24" | nc 0 5003
+  echo "set int ip address del host-intervpp2 6:0:3::2/64" | nc 0 5003
+  echo "set int ip address host-intervpp2 6:0:3::20/64" | nc 0 5003
   post_curl "update-mapping" ${ODL_CONFIG_FILE3}
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
