@@ -27,7 +27,7 @@ function test_basic_multi_traffic
 
   test_result=1
 
-  if [ "$3" == "wait" ] ; then
+  if [ "$5" == "wait" ] ; then
     read -p  "press any key to continue .." -n1
   fi
 
@@ -56,6 +56,10 @@ function test_basic_multi_traffic
   ODL_CONFIG_DIR=`pwd`/../configs/odl/basic/4o4
   post_curl "update-mapping" ${ODL_CONFIG_FILE3}
 
+  if [ "$5" == "wait" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
+
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   if [ $? -ne 0 ] ; then
     echo "No response received!"
@@ -66,7 +70,7 @@ function test_basic_multi_traffic
   ip netns exec vppns1 "${3}" -w 15 -c 1 "${4}"
   rc=$?
 
-  if [ "$3" == "wait" ] ; then
+  if [ "$5" == "wait" ] ; then
     read -p  "press any key to continue .." -n1
   fi
 

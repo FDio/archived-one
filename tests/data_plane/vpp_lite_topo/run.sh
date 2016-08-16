@@ -11,9 +11,10 @@ function help
   echo
   echo This must be run with superuser privileges.
   echo "Usage:"
-  echo " ./run.sh [vh]"
+  echo " ./run.sh [vhc]"
   echo
   echo "  -v : verbose output"
+  echo "  -c : clean"
   echo "  -h : show help"
 }
 
@@ -28,6 +29,9 @@ while [ $# -gt 0 ] ; do
   elif [ $arg == "-h" ] ; then
     help
     exit 0
+  elif [ $arg == "-c" ] ; then
+    clean_all
+    exit 0
   fi
 done
 
@@ -40,19 +44,15 @@ passed_num=0
 
 start_time=`date +%s`
 
-# check whether ODL is running
-if [ "`curl -X DELETE \
-  "http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database" \
-   -u ${ODL_USER}:${ODL_PASSWD} -s -o /dev/null -w "%{http_code}"`" != 200 ] ; then
-  echo "ODL is not running!"
-  exit 1
-fi
-
 # sudo?
 if [[ $(id -u) != 0 ]]; then
   echo "Superuser privileges needed!"
   exit 1
 fi
+
+# check whether ODL is running
+check_odl_running
+
 
 # count tests
 test_num=`ls -l "$TESTS_DIR"/test_* | wc -l`

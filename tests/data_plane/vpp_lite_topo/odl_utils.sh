@@ -14,3 +14,10 @@ function odl_clear_all {
   curl -X DELETE "http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database" \
        -u ${ODL_USER}:${ODL_PASSWD}
 }
+
+function check_odl_running {
+  if [ -z  "`netstat -tunlp | grep 8181`" ] ; then
+  echo "ODL is not running!"
+    exit 1
+  fi
+}
