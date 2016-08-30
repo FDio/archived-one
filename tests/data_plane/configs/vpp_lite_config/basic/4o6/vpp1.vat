@@ -1,0 +1,6 @@
+lisp_enable_disable enable
+
+lisp_add_del_locator_set locator-set ls1
+lisp_add_del_locator locator-set ls1 iface host-intervpp1 p 1 w 1
+lisp_add_del_local_eid eid 6.0.1.0/24 locator-set ls1
+lisp_add_del_map_resolver 6:0:3::100

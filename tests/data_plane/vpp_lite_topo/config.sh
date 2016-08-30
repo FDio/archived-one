@@ -5,6 +5,7 @@ ODL_PORT="8181"
 
 # path to vpp executable
 VPP_LITE_BIN=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
+VPP_API_TEST=/vpp/build-root/install-vpp_lite_debug-native/vpp-api-test/bin/vpp_api_test
 
 # read user config file if exists
 if [ -f "${HOME}/.onerc" ] ; then
@@ -15,6 +16,16 @@ if [ ! -f "${VPP_LITE_BIN}" ] ; then
   echo "Error: VPP binary not found. You can set VPP_LITE_BIN in config.sh"
   echo "Current value:"
   echo "VPP_LITE_BIN=${VPP_LITE_BIN}"
+  exit 1
+fi
+
+if [ ! -f "${VPP_API_TEST}" ] ; then
+  echo "Error: vpp_api_test not found. Either it's not built or environment \
+    variable VPP_API_TEST is not set. You can build vpp_api_test with:"
+  echo "$ make build-vat"
+  echo "VPP_API_TEST can be set in config.sh or in ~/.onerc."
+  echo "Current value:"
+  echo "VPP_LITE_BIN=${VPP_API_TEST}"
   exit 1
 fi
 

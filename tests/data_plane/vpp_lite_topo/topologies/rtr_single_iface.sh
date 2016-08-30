@@ -97,6 +97,11 @@ function rtr_single_iface_setup {
            exec ${VPP_LITE_CONF}/rtr.config } \
     api-trace { on } api-segment {prefix rtr}
 
+  sleep 2
+  ${VPP_API_TEST} chroot prefix xtr1 script in ${VPP_LITE_CONF}/vpp1.vat
+  ${VPP_API_TEST} chroot prefix xtr2 script in ${VPP_LITE_CONF}/vpp2.vat
+  ${VPP_API_TEST} chroot prefix rtr script in ${VPP_LITE_CONF}/vpp3.vat
+
   post_curl "add-mapping" ${ODL_CONFIG_FILE1}
   post_curl "add-mapping" ${ODL_CONFIG_FILE2}
 }
