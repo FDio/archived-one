@@ -21,34 +21,18 @@ function test_basic
     basic_topo_setup
   fi
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-
+  maybe_pause
   test_result=1
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   rc=$?
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-
-  if [ $rc -ne 0 ] ; then
-    echo "No response received!"
-    basic_topo_clean
-    exit $test_result
-  fi
+  maybe_pause
+  assert_rc_ok $rc basic_topo_clean "No response received!"
 
   # test done
 
   basic_topo_clean
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICM response!"
   exit $test_result
 }

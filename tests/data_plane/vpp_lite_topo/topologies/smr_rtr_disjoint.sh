@@ -115,29 +115,29 @@ function smr_rtr_disjoint_setup {
   ip addr add 6:0:5::100/64 dev odl_vpp2
   ethtool --offload  odl_vpp2 rx off tx off
 
-  ${VPP_LITE_BIN} \
-    unix { log /tmp/vpp1.log cli-listen \
-           localhost:5002 full-coredump \
-           exec ${VPP_LITE_CONF}/vpp1.config } \
-    api-trace { on } api-segment {prefix xtr1}
+  # generate config files
+  ./scripts/generate_config.py ${VPP_LITE_CONF} ${CFG_METHOD}
 
-  ${VPP_LITE_BIN} \
-    unix { log /tmp/vpp2.log cli-listen \
-           localhost:5003 full-coredump \
-           exec ${VPP_LITE_CONF}/vpp2.config } \
-    api-trace { on } api-segment {prefix xtr2}
+  start_vpp 5002 vpp1
+  start_vpp 5003 vpp2
+  start_vpp 5004 vpp3
 
-   ${VPP_LITE_BIN} \
-    unix { log /tmp/rtr.log cli-listen \
-           localhost:5004 full-coredump \
-           exec ${VPP_LITE_CONF}/rtr.config } \
-    api-trace { on } api-segment {prefix rtr}
-
-  sleep 2
-  ${VPP_API_TEST} chroot prefix xtr1 script in ${VPP_LITE_CONF}/vpp1.vat
-  ${VPP_API_TEST} chroot prefix xtr2 script in ${VPP_LITE_CONF}/vpp2.vat
-  ${VPP_API_TEST} chroot prefix rtr script in ${VPP_LITE_CONF}/vpp3.vat
-
+  echo "* Selected configuration method: $CFG_METHOD"
+  if [ "$CFG_METHOD" == "cli" ] ; then
+    echo "exec ${VPP_LITE_CONF}/vpp1.cli" | nc 0 5002
+    echo "exec ${VPP_LITE_CONF}/vpp2.cli" | nc 0 5003
+    echo "exec ${VPP_LITE_CONF}/vpp3.cli" | nc 0 5004
+  elif [ "$CFG_METHOD" == "vat" ] ; then
+    sleep 2
+    ${VPP_API_TEST} chroot prefix vpp1 script in ${VPP_LITE_CONF}/vpp1.vat
+    ${VPP_API_TEST} chroot prefix vpp2 script in ${VPP_LITE_CONF}/vpp2.vat
+    ${VPP_API_TEST} chroot prefix vpp3 script in ${VPP_LITE_CONF}/vpp3.vat
+  else
+    echo "=== WARNING:"
+    echo "=== Invalid configuration method selected!"
+    echo "=== To resolve this set env variable CFG_METHOD to vat or cli."
+    echo "==="
+  fi
   post_curl "add-mapping" ${ODL_CONFIG_FILE1}
   post_curl "add-mapping" ${ODL_CONFIG_FILE2}
 }

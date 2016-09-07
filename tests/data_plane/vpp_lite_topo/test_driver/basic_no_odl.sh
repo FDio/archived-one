@@ -16,9 +16,7 @@ function test_basic_no_odl
 {
   basic_topo_setup no_odl
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   test_result=1
 
@@ -43,9 +41,7 @@ function test_basic_no_odl
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   rc=$?
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   # test done
 

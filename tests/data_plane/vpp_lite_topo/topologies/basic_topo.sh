@@ -82,26 +82,29 @@ function basic_topo_setup
   ip addr add 6:0:3::100/64 dev odl
   ethtool --offload  odl rx off tx off
 
-  # start vpp1 and vpp2 in separate chroot
-  ${VPP_LITE_BIN}                                 \
-    unix { log /tmp/vpp1.log cli-listen           \
-           localhost:5002 full-coredump           \
-           exec ${VPP_LITE_CONF}/vpp1.config }    \
-           api-trace { on } api-segment {prefix xtr1}
+  # generate config files
+  ./scripts/generate_config.py ${VPP_LITE_CONF} ${CFG_METHOD}
 
-  ${VPP_LITE_BIN}                                 \
-    unix { log /tmp/vpp2.log cli-listen           \
-           localhost:5003 full-coredump           \
-           exec ${VPP_LITE_CONF}/vpp2.config }    \
-           api-trace { on } api-segment {prefix xtr2}
+  start_vpp 5002 vpp1
+  start_vpp 5003 vpp2
 
-  sleep 2
-  ${VPP_API_TEST} chroot prefix xtr1 script in ${VPP_LITE_CONF}/vpp1.vat
-  ${VPP_API_TEST} chroot prefix xtr2 script in ${VPP_LITE_CONF}/vpp2.vat
+  echo "* Selected configuration method: $CFG_METHOD"
+  if [ "$CFG_METHOD" == "cli" ] ; then
+    echo "exec ${VPP_LITE_CONF}/vpp1.cli" | nc 0 5002
+    echo "exec ${VPP_LITE_CONF}/vpp2.cli" | nc 0 5003
+  elif [ "$CFG_METHOD" == "vat" ] ; then
+    sleep 2
+    ${VPP_API_TEST} chroot prefix vpp1 script in ${VPP_LITE_CONF}/vpp1.vat
+    ${VPP_API_TEST} chroot prefix vpp2 script in ${VPP_LITE_CONF}/vpp2.vat
+  else
+    echo "=== WARNING:"
+    echo "=== Invalid configuration method selected!"
+    echo "=== To resolve this set env variable CFG_METHOD to vat or cli."
+    echo "==="
+  fi
 
   if [ "$1" != "no_odl" ] ; then
     post_curl "add-mapping" ${ODL_CONFIG_FILE1}
     post_curl "add-mapping" ${ODL_CONFIG_FILE2}
   fi
 }
-

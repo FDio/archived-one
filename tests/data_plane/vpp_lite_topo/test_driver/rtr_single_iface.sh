@@ -20,23 +20,16 @@ fi
 function test_rtr_single_iface {
   rtr_single_iface_setup
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   test_result=1
 
   ip netns exec vpp-ns1 "${1}" -w 20 -c 1 "${2}"
   rc=$?
 
+  maybe_pause
   rtr_single_iface_clean
 
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

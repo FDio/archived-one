@@ -35,54 +35,29 @@ function test_smr_rtr_disjoint {
   # CONFIGURE
   smr_rtr_disjoint_setup
 
-  if [ "$2" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   test_result=1
   rc=0
 
   # TEST IP6 over IP4
   test_ns_ping $1 vpp1-ns
+  assert_rc_ok $? smr_rtr_disjoint_clean "No icmp received!"
 
-  rc=$?
-
-  if [ $rc -ne 0 ] ; then
-    echo "IPv6 over IPv4 test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "IPv6 over IPv4 test passed."
-    test_result=0
-  fi
-
-  if [ "$2" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   # RECONFIGURE
   smr_rtr_disjoint_reconfigure
 
-  if [ "$2" == "wait" ] ; then
-    read -p  "Forwarding reconfigured press any key to continue .." -n1
-  fi
+  maybe_pause
 
   # TEST IP6 over disjoint IP4 and IP6 underlay
   test_ns_ping $1 vpp1-ns
-
   rc=$?
 
-  if [ $rc -ne 0 ] ; then
-    echo "SMR + disjoint locators test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "SMR + disjoint locators test passed."
-    test_result=0
-  fi
-
-  if [ "$2" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-
+  maybe_pause
   # CLEANUP
   smr_rtr_disjoint_clean
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

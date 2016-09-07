@@ -6,13 +6,6 @@ ODL_CONFIG_FILE1="vpp1.json"
 ODL_CONFIG_FILE2="vpp2.json"
 ODL_CONFIG_FILE3="update_vpp2.json"
 
-function maybe_pause
-{
-  if [ "$1" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-}
-
 if [ "$1" == "clean" ] ; then
   multihoming_topo_clean
   exit 0
@@ -83,12 +76,6 @@ function test_multihoming
   maybe_pause $3
 
   multihoming_topo_clean
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

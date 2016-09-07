@@ -20,9 +20,7 @@ fi
 function test_rtr_two_iface {
   rtr_two_iface_setup
 
-  if [ "$2" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   test_result=1
   rc=0
@@ -37,21 +35,9 @@ function test_rtr_two_iface {
     echo "Unrecognized IP format '$1'"
   fi
 
-  #ip netns exec vpp1-ns ping -w 15 -c 1 "${1}"
-  #rc=$?
-
-  if [ "$2" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   rtr_two_iface_clean
-
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

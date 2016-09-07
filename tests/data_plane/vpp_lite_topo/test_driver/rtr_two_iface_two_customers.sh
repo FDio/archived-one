@@ -24,35 +24,17 @@ function test_rtr_two_iface_two_customers {
   test_result=0
   rc=0
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   ip netns exec vpp1-cus1-ns "${1}" -w 20 -c 1 "${2}"
-  rc=$?
-  if [ $rc -ne 0 ] ; then
-    echo "Error: customer 1 did not receive any response!"
-    test_result=1
-  fi
+  assert_rc_ok $? rtr_two_iface_two_customers_clean "No response received!"
 
   ip netns exec vpp1-cus2-ns "${1}" -w 20 -c 1 "${2}"
   rc=$?
-  if [ $rc -ne 0 ] ; then
-    echo "Error: customer 2 did not receive any response!"
-    test_result=1
-  fi
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   rtr_two_iface_two_customers_clean
-
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

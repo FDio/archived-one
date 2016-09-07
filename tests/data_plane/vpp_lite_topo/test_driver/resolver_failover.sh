@@ -30,27 +30,17 @@ function test_resolver_failover
 
   test_result=1
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   ip netns exec vppns1 "${1}" -w 20 -c 1 "${2}"
   rc=$?
 
   # test done
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   basic_two_odls_clean
   kill $mr_id
 
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

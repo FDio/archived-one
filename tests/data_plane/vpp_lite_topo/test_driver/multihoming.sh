@@ -22,13 +22,12 @@ function test_multihoming
     multihoming_topo_setup
   fi
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   test_result=1
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  assert_rc_ok $? multihoming_topo_clean "No response received!"
 
   # do some port sweeping to see that load balancing works
   ip netns exec vppns1 nc -n -z "${2}" 1-1000 > /dev/null 2>&1
@@ -45,17 +44,13 @@ function test_multihoming
   if [ $rc -ne 0 ] ; then
     echo "Load balancing doesn't work!"
 
-    if [ "$3" == "wait" ] ; then
-      read -p  "press any key to continue .." -n1
-    fi
+    maybe_pause
 
     multihoming_topo_clean
     exit $test_result
   fi
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp12 6.0.3.2/24" | nc 0 5003
@@ -69,17 +64,9 @@ function test_multihoming
 
   # test done
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   multihoming_topo_clean
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

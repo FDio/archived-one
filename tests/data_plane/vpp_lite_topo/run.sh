@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-source config.sh
 source odl_utils.sh
 
 TESTS_DIR=tests
@@ -11,12 +10,16 @@ function help
   echo
   echo This must be run with superuser privileges.
   echo "Usage:"
-  echo " ./run.sh [vhc]"
+  echo " ./run.sh [vhc] [--config-method vat|cli]"
   echo
   echo "  -v : verbose output"
   echo "  -c : clean"
   echo "  -h : show help"
+  echo "  --config-method : select configuration method. Default is VAT."
 }
+
+export CFG_METHOD=vat
+source config.sh
 
 verbose=0
 
@@ -32,6 +35,19 @@ while [ $# -gt 0 ] ; do
   elif [ $arg == "-c" ] ; then
     clean_all
     exit 0
+  elif [ $arg == "--config-method" ] ; then
+    type=$1
+    shift
+    if [ $type != "vat" -a $type != "cli"  ] ; then
+      echo "ERROR: expected one of 'cli' or 'vat' "
+      help
+      exit 1
+    fi
+    export CFG_METHOD=$type
+  else
+    echo "parse error"
+    help
+    exit 1
   fi
 done
 
@@ -59,6 +75,8 @@ test_num=`ls -l "$TESTS_DIR"/test_* | wc -l`
 
 echo
 echo "Running VPP lite test suite."
+echo
+echo "Config method: $CFG_METHOD"
 echo
 
 for test_case in "$TESTS_DIR"/test_*

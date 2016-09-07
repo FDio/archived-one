@@ -1,8 +1,0 @@
-lisp_enable_disable enable
-
-lisp_add_del_locator_set locator-set ls1
-lisp_add_del_locator locator-set ls1 iface host-xtr_rtr2 p 1 w 1
-
-lisp_pitr_set_locator_set locator-set ls1
-lisp_add_del_remote_mapping add vni 0 deid 6:0:0::0/64 action 2
-lisp_add_del_map_resolver 6.0.3.100

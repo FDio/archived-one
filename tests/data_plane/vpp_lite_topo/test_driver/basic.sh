@@ -22,24 +22,13 @@ function test_basic
     basic_topo_setup
   fi
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-
+  maybe_pause
   test_result=1
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
-  rc=$?
-  if [ $rc -ne 0 ] ; then
-    echo "No response received!"
-    basic_topo_clean
-    exit $test_result
-  fi
+  assert_rc_ok $? basic_topo_clean "No ICMP response!"
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-
+  maybe_pause
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp2 6.0.3.2/24" | nc 0 5003
   echo "set int ip address host-intervpp2 6.0.3.20/24" | nc 0 5003
@@ -52,17 +41,8 @@ function test_basic
 
   # test done
 
-  if [ "$3" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
-
+  maybe_pause
   basic_topo_clean
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
-
+  print_status $rc "No ICMP response!"
   exit $test_result
 }

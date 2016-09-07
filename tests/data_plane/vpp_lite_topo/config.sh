@@ -29,6 +29,15 @@ if [ ! -f "${VPP_API_TEST}" ] ; then
   exit 1
 fi
 
+if [ "${CFG_METHOD}" == '' ] ; then
+  CFG_METHOD=vat
+  echo
+  echo "* INFO: configuration method not selected, defaulting to 'vat'"
+  echo "* To define the method run the test as follows:"
+  echo "* $ sudo CFG_METHOD=vat|cli ./tests/<tc>.sh"
+  echo
+fi
+
 function clean_all
 {
   echo "Clearing all VPP instances.."
@@ -88,6 +97,44 @@ function clean_all
   if [ "$1" != "no_odl" ] ; then
     odl_clear_all
   fi
+}
+
+function maybe_pause
+{
+  if [ "$WAIT" == "1" ] ; then
+    read -p  "press any key to continue .." -n1
+  fi
+}
 
 
+function start_vpp
+{
+  # start_vpp port prefix
+
+  ${VPP_LITE_BIN} \
+    unix { log /tmp/$2.log           \
+           full-coredump             \
+           cli-listen localhost:$1 } \
+    api-trace { on } api-segment { prefix "$2" }
+}
+
+function print_status
+{
+  # show_status rc error_msg
+  if [ $1 -ne 0 ] ; then
+    echo "Test failed: $2"
+  else
+    echo "Test passed."
+    test_result=0
+  fi
+}
+
+function assert_rc_ok
+{
+  # assert_rc_ok rc cleanup_fcn error_msg
+  if [ $1 -ne 0 ] ; then
+    echo $3
+    $2
+    exit $test_result
+  fi
 }

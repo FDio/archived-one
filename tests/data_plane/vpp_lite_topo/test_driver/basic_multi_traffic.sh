@@ -27,23 +27,13 @@ function test_basic_multi_traffic
 
   test_result=1
 
-  if [ "$5" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
-  if [ $? -ne 0 ] ; then
-    echo "No response received!"
-    basic_topo_clean
-    exit $test_result
-  fi
+  assert_rc_ok $? basic_topo_clean "No response received!"
 
   ip netns exec vppns1 "${3}" -w 15 -c 1 "${4}"
-  if [ $? -ne 0 ] ; then
-    echo "No response received!"
-    basic_topo_clean
-    exit $test_result
-  fi
+  assert_rc_ok $? basic_topo_clean "No response received!"
 
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp2 6.0.3.2/24" | nc 0 5003
@@ -56,33 +46,19 @@ function test_basic_multi_traffic
   ODL_CONFIG_DIR=`pwd`/../configs/odl/basic/4o4
   post_curl "update-mapping" ${ODL_CONFIG_FILE3}
 
-  if [ "$5" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
-  if [ $? -ne 0 ] ; then
-    echo "No response received!"
-    basic_topo_clean
-    exit $test_result
-  fi
+  assert_rc_ok $? basic_topo_clean "No response received!"
 
   ip netns exec vppns1 "${3}" -w 15 -c 1 "${4}"
   rc=$?
 
-  if [ "$5" == "wait" ] ; then
-    read -p  "press any key to continue .." -n1
-  fi
+  maybe_pause
 
   # test done
-
   basic_topo_clean
-  if [ $rc -ne 0 ] ; then
-    echo "Test failed: No ICMP response received within specified timeout limit!"
-  else
-    echo "Test passed."
-    test_result=0
-  fi
+  print_status $rc "No ICMP response!"
 
   exit $test_result
 }
