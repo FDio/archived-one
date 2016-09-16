@@ -95,6 +95,8 @@ function basic_topo_setup
   start_vpp 5002 vpp1
   start_vpp 5003 vpp2
 
+  maybe_pause
+
   echo "* Selected configuration method: $CFG_METHOD"
   if [ "$CFG_METHOD" == "cli" ] ; then
     echo "exec ${VPP_LITE_CONF}/vpp1.cli" | nc 0 5002

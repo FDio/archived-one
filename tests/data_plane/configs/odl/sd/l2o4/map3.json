@@ -1,0 +1,30 @@
+{
+    "input": {
+        "mapping-record": {
+            "recordTtl": 1440,
+            "action": "NoAction",
+            "authoritative": true,
+            "eid": {
+                "virtual-network-id": 20,
+                "address-type": "ietf-lisp-address-types:mac-afi",
+                "mac": "08:11:11:11:11:11"
+            },
+            "LocatorRecord": [
+                {
+                    "locator-id": "ISP1",
+                    "priority": 1,
+                    "weight": 1,
+                    "multicastPriority": 255,
+                    "multicastWeight": 0,
+                    "localLocator": true,
+                    "rlocProbed": false,
+                    "routed": true,
+                    "rloc": {
+                        "address-type": "ietf-lisp-address-types:ipv4-afi",
+                        "ipv4": "6.0.3.1"
+                    }
+                }
+            ]
+        }
+    }
+}

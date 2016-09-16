@@ -85,7 +85,7 @@ do
 
   # run the test case
   base_name=`basename -a "$test_case"`
-  printf "*** %2d/%d : %-45s" $count $test_num "$base_name"
+  printf "*** %2d/%d : %-48s" $count $test_num "$base_name"
 
   if [ $verbose -ne 0 ] ; then
     "$test_case"

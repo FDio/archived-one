@@ -135,6 +135,17 @@ function assert_rc_ok
   # assert_rc_ok rc cleanup_fcn error_msg
   if [ $1 -ne 0 ] ; then
     echo $3
+    maybe_pause
+    $2
+    exit $test_result
+  fi
+}
+
+function assert_rc_not_ok
+{
+  if [ $1 -eq 0 ] ; then
+    echo $3
+    maybe_pause
     $2
     exit $test_result
   fi
