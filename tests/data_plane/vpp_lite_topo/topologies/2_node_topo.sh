@@ -26,9 +26,11 @@ function set_arp
 
   mac=`echo "sh hard host-intervpp1" | nc 0 5002 | grep 'Ethernet address' | awk '{print $3}'`
   echo "set ip arp host-intervpp2 6.0.3.1 $mac" | nc 0 5003
+  echo "set ip6 neighbor host-intervpp2 6:0:3::1 $mac" | nc 0 5003
 
   mac=`echo "sh hard host-intervpp2" | nc 0 5003 | grep 'Ethernet address' | awk '{print $3}'`
   echo "set ip arp host-intervpp1 6.0.3.2 $mac" | nc 0 5002
+  echo "set ip6 neighbor host-intervpp1 6:0:3::2 $mac" | nc 0 5002
 }
 
 function 2_node_topo_clean
@@ -119,12 +121,12 @@ function 2_node_topo_setup
   start_vpp 5002 vpp1
   start_vpp 5003 vpp2
 
+  sleep 2
   echo "* Selected configuration method: $CFG_METHOD"
   if [ "$CFG_METHOD" == "cli" ] ; then
     echo "exec ${VPP_LITE_CONF}/vpp1.cli" | nc 0 5002
     echo "exec ${VPP_LITE_CONF}/vpp2.cli" | nc 0 5003
   elif [ "$CFG_METHOD" == "vat" ] ; then
-    sleep 2
     ${VPP_API_TEST} chroot prefix vpp1 script in ${VPP_LITE_CONF}/vpp1.vat
     ${VPP_API_TEST} chroot prefix vpp2 script in ${VPP_LITE_CONF}/vpp2.vat
   else
