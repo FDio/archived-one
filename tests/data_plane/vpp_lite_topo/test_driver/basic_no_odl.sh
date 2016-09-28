@@ -1,9 +1,9 @@
 source config.sh
 source odl_utils.sh
-source topologies/basic_topo.sh
+source topologies/2_node_topo.sh
 
 if [ "$1" == "clean" ] ; then
-  basic_topo_clean
+  2_node_topo_clean
   exit 0
 fi
 
@@ -14,7 +14,7 @@ fi
 
 function test_basic_no_odl
 {
-  basic_topo_setup no_odl
+  2_node_topo_setup no_odl
 
   maybe_pause
 
@@ -23,7 +23,7 @@ function test_basic_no_odl
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   if [ $? -ne 0 ] ; then
     echo "No response received!"
-    basic_topo_clean no_odl
+    2_node_topo_clean no_odl
     exit $test_result
   fi
 
@@ -45,7 +45,7 @@ function test_basic_no_odl
 
   # test done
 
-  basic_topo_clean no_odl
+  2_node_topo_clean no_odl
   if [ $rc -ne 0 ] ; then
     echo "Test failed: No ICMP response received within specified timeout limit!"
   else

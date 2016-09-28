@@ -1,13 +1,13 @@
 source config.sh
 source odl_utils.sh
-source topologies/basic_topo.sh
+source topologies/2_node_topo.sh
 
 ODL_CONFIG_FILE1="vpp1.json"
 ODL_CONFIG_FILE2="vpp2.json"
 ODL_CONFIG_FILE3="update_vpp2.json"
 
 if [ "$1" == "clean" ] ; then
-  basic_topo_clean
+  2_node_topo_clean
   exit 0
 fi
 
@@ -19,14 +19,14 @@ fi
 function test_basic
 {
   if [ "$3" != "no_setup" ] ; then
-    basic_topo_setup
+    2_node_topo_setup
   fi
 
   maybe_pause
   test_result=1
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
-  assert_rc_ok $? basic_topo_clean "No ICMP response!"
+  assert_rc_ok $? 2_node_topo_clean "No ICMP response!"
 
   maybe_pause
   # change IP addresses of destination RLOC
@@ -42,7 +42,7 @@ function test_basic
   # test done
 
   maybe_pause
-  basic_topo_clean
+  2_node_topo_clean
   print_status $rc "No ICMP response!"
   exit $test_result
 }

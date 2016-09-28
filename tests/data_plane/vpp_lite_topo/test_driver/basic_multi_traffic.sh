@@ -1,13 +1,13 @@
 source config.sh
 source odl_utils.sh
-source topologies/basic_topo.sh
+source topologies/2_node_topo.sh
 
 ODL_CONFIG_FILE1="vpp1.json"
 ODL_CONFIG_FILE2="vpp2.json"
 ODL_CONFIG_FILE3="update_vpp2.json"
 
 if [ "$1" == "clean" ] ; then
-  basic_topo_clean
+  2_node_topo_clean
   exit 0
 fi
 
@@ -18,7 +18,7 @@ fi
 
 function test_basic_multi_traffic
 {
-  basic_topo_setup
+  2_node_topo_setup
 
   # additional setup
   ODL_CONFIG_DIR=`pwd`/../configs/odl/basic/4o4
@@ -30,10 +30,10 @@ function test_basic_multi_traffic
   maybe_pause
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
-  assert_rc_ok $? basic_topo_clean "No response received!"
+  assert_rc_ok $? 2_node_topo_clean "No response received!"
 
   ip netns exec vppns1 "${3}" -w 15 -c 1 "${4}"
-  assert_rc_ok $? basic_topo_clean "No response received!"
+  assert_rc_ok $? 2_node_topo_clean "No response received!"
 
   # change IP addresses of destination RLOC
   echo "set int ip address del host-intervpp2 6.0.3.2/24" | nc 0 5003
@@ -49,7 +49,7 @@ function test_basic_multi_traffic
   maybe_pause
 
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
-  assert_rc_ok $? basic_topo_clean "No response received!"
+  assert_rc_ok $? 2_node_topo_clean "No response received!"
 
   ip netns exec vppns1 "${3}" -w 15 -c 1 "${4}"
   rc=$?
@@ -57,9 +57,8 @@ function test_basic_multi_traffic
   maybe_pause
 
   # test done
-  basic_topo_clean
+  2_node_topo_clean
   print_status $rc "No ICMP response!"
 
   exit $test_result
 }
-

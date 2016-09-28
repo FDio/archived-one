@@ -58,6 +58,7 @@ SimpleMapping('lisp_map_resolver', 'lisp map-resolver', 'lisp_add_del_map_resolv
 SimpleMapping('lisp_local_eid', 'lisp eid-table', 'lisp_add_del_local_eid')
 SimpleMapping('lisp_remote_mapping', 'lisp remote-mapping', 'lisp_add_del_remote_mapping')
 SimpleMapping('lisp_pitr', 'lisp pitr ls', 'lisp_pitr_set_locator_set locator-set')
+SimpleMapping('lisp_adjacency', 'lisp adjacency', 'lisp_add_del_adjacency')
 SimpleMapping('set_if_ip', 'set int ip address', 'sw_interface_add_del_address')
 
 CustomMapping('lisp_eid_map_bd',

@@ -1,6 +1,37 @@
-#!/usr/bin/env bash
 
-function basic_topo_clean
+#
+#                                +--------+
+#                                |        |
+#                                |   MR   |
+#                                |        |
+#                                +--------+
+#                                     |6.0.3.100
+#6:0:1::2                             |6:0:3::100
+#6.0.1.2     vpp1 +--------+          |         +--------+
+#       +---------+        |intervpp1 |intervpp2|        |vpp2
+#                 |  VPP1  +----------+---------+  VPP2  +---------+
+#                 |        |                    |        |      6.0.2.2
+#                 +--------+                    +--------+      6:0:2::2
+#
+
+function set_arp
+{
+  mac=`ip netns exec vppns1 ip a show dev veth_vpp1  | grep "link/ether" | awk '{print $2}'`
+  echo "set ip arp host-vpp1 6.0.1.2 $mac" | nc 0 5002
+  echo "set ip6 neighbor host-vpp1 6:0:1::2 $mac" | nc 0 5002
+
+  mac=`ip netns exec vppns2 ip a show dev veth_vpp2  | grep "link/ether" | awk '{print $2}'`
+  echo "set ip arp host-vpp2 6.0.2.2 $mac" | nc 0 5003
+  echo "set ip6 neighbor host-vpp2 6:0:2::2 $mac" | nc 0 5003
+
+  mac=`echo "sh hard host-intervpp1" | nc 0 5002 | grep 'Ethernet address' | awk '{print $3}'`
+  echo "set ip arp host-intervpp2 6.0.3.1 $mac" | nc 0 5003
+
+  mac=`echo "sh hard host-intervpp2" | nc 0 5003 | grep 'Ethernet address' | awk '{print $3}'`
+  echo "set ip arp host-intervpp1 6.0.3.2 $mac" | nc 0 5002
+}
+
+function 2_node_topo_clean
 {
   echo "Clearing all VPP instances.."
   pkill vpp --signal 9
@@ -23,7 +54,7 @@ function basic_topo_clean
   fi
 }
 
-function basic_topo_setup
+function 2_node_topo_setup
 {
 
   # create vpp to clients and inter-vpp namespaces
@@ -107,4 +138,6 @@ function basic_topo_setup
     post_curl "add-mapping" ${ODL_CONFIG_FILE1}
     post_curl "add-mapping" ${ODL_CONFIG_FILE2}
   fi
+
+  set_arp
 }
