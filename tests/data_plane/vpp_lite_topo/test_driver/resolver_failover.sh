@@ -1,9 +1,6 @@
 source config.sh
 source odl_utils.sh
-source topologies/basic_two_odls.sh
-
-ODL_CONFIG_FILE1="vpp1.json"
-ODL_CONFIG_FILE2="vpp2.json"
+source topologies/2_node_topo.sh
 
 if [ "$1" == "clean" ] ; then
   basic_two_odls_clean
@@ -15,18 +12,11 @@ if [[ $(id -u) != 0 ]]; then
   exit 1
 fi
 
-function start_map_resolver
-{
-  echo "starting dummy map resolver on interface $1"
-  python scripts/dummy_mr.py "$1" 4342 &
-  mr_id=$!
-}
-
 function test_resolver_failover
 {
-  basic_two_odls_setup
+  2_node_topo_setup no_odl
 
-  start_map_resolver "6.0.3.100"
+  start_map_resolver "6.0.3.200"
 
   test_result=1
 
@@ -38,7 +28,7 @@ function test_resolver_failover
   # test done
   maybe_pause
 
-  basic_two_odls_clean
+  2_node_topo_clean no_odl
   kill $mr_id
 
   print_status $rc "No ICMP response!"

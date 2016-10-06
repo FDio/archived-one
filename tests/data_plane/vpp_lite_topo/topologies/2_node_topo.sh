@@ -5,13 +5,15 @@
 #                                |   MR   |
 #                                |        |
 #                                +--------+
-#                                     |6.0.3.100
+#                                odl  |6.0.3.100
 #6:0:1::2                             |6:0:3::100
 #6.0.1.2     vpp1 +--------+          |         +--------+
 #       +---------+        |intervpp1 |intervpp2|        |vpp2
 #                 |  VPP1  +----------+---------+  VPP2  +---------+
-#                 |        |                    |        |      6.0.2.2
-#                 +--------+                    +--------+      6:0:2::2
+#                 |        |          |         |        |      6.0.2.2
+#                 +--------+          |         +--------+      6:0:2::2
+#                                     +mr
+#                                     6.0.3.200
 #
 
 function set_arp
@@ -47,6 +49,7 @@ function 2_node_topo_clean
   ip link del dev veth_intervpp1 &> /dev/null
   ip link del dev veth_intervpp2 &> /dev/null
   ip link del dev veth_odl &> /dev/null
+  ip link del dev veth_mr &> /dev/null
   ip netns del vppns1 &> /dev/null
   ip netns del vppns2 &> /dev/null
   ip netns del intervppns &> /dev/null
@@ -68,18 +71,22 @@ function 2_node_topo_setup
   ip link add veth_intervpp1 type veth peer name intervpp1
   ip link add veth_intervpp2 type veth peer name intervpp2
   ip link add veth_odl type veth peer name odl
+  ip link add veth_mr type veth peer name mr
   ip link set dev intervpp1 up
   ip link set dev intervpp2 up
   ip link set dev odl up
+  ip link set dev mr up
   ip link set dev veth_intervpp1 up netns intervppns
   ip link set dev veth_intervpp2 up netns intervppns
   ip link set dev veth_odl up netns intervppns
+  ip link set dev veth_mr up netns intervppns
 
   # create bridge in intervppns and add vpp and odl interfaces
   ip netns exec intervppns brctl addbr vppbr
   ip netns exec intervppns brctl addif vppbr veth_intervpp1
   ip netns exec intervppns brctl addif vppbr veth_intervpp2
   ip netns exec intervppns brctl addif vppbr veth_odl
+  ip netns exec intervppns brctl addif vppbr veth_mr
   ip netns exec intervppns ifconfig vppbr up
 
   # create and configure 1st veth client to vpp pair
@@ -114,6 +121,9 @@ function 2_node_topo_setup
   ip addr add 6.0.3.100/24 dev odl
   ip addr add 6:0:3::100/64 dev odl
   ethtool --offload  odl rx off tx off
+
+  ip addr add 6.0.3.200/24 dev mr
+  ethtool --offload mr rx off tx off
 
   # generate config files
   ./scripts/generate_config.py ${VPP_LITE_CONF} ${CFG_METHOD}

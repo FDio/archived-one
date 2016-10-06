@@ -138,3 +138,10 @@ function assert_rc_ok
     exit $test_result
   fi
 }
+
+function start_map_resolver
+{
+  echo "starting dummy map resolver on interface $1"
+  python scripts/dummy_mr.py "$1" 4342 &
+  mr_id=$!
+}

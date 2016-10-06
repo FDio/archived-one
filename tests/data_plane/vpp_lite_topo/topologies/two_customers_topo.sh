@@ -112,6 +112,7 @@ function two_customers_topo_setup {
   # generate config files
   ./scripts/generate_config.py ${VPP_LITE_CONF} ${CFG_METHOD}
 
+  sleep 3
   start_vpp 5002 vpp1
   start_vpp 5003 vpp2
 
