@@ -4,7 +4,8 @@ ODL_IP="127.0.0.1"
 ODL_PORT="8181"
 
 # path to vpp executable
-VPP_LITE_BIN=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin/vpp
+VPP_LITE_DIR=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin
+VPP_LITE_BIN=${VPP_LITE_DIR}/vpp
 VPP_API_TEST=/vpp/build-root/install-vpp_lite_debug-native/vpp-api-test/bin/vpp_api_test
 
 # read user config file if exists
