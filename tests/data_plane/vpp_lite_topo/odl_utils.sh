@@ -13,6 +13,7 @@ function odl_clear_all {
   echo "Deleting all ODL mappings.."
   curl -X DELETE "http://${ODL_IP}:${ODL_PORT}/restconf/config/odl-mappingservice:mapping-database" \
        -u ${ODL_USER}:${ODL_PASSWD}
+  # TODO how to delete operational mappings?
 }
 
 function check_odl_running {

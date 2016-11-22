@@ -46,3 +46,49 @@ function test_basic
   print_status $rc "No ICMP response!"
   exit $test_result
 }
+
+function test_basic_map_register
+{
+  2_node_topo_setup no_odl
+  post_curl "add-key" ${ODL_CONFIG_FILE1}
+  post_curl "add-key" ${ODL_CONFIG_FILE2}
+
+  maybe_pause
+
+  test_result=1
+
+  wait_for_map_register=10
+  echo "Waiting for map registration $wait_for_map_register seconds .."
+  sleep $wait_for_map_register
+
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  rc=$?
+
+  maybe_pause
+
+  # test done
+  2_node_topo_clean
+  print_status $rc "No ICMP response!"
+  exit $test_result
+}
+
+function test_rloc_probe
+{
+  2_node_topo_setup
+
+  maybe_pause
+  test_result=1
+
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  rc=$?
+  assert_rc_ok $rc 2_node_topo_clean "No ICMP response!"
+
+  read -p  "Please check RLOC probe messages manually .." -n1
+
+  # test done
+
+  maybe_pause
+  2_node_topo_clean
+  print_status $rc "No ICMP response!"
+  exit $test_result
+}
