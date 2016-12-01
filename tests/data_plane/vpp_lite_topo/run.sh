@@ -72,6 +72,8 @@ check_odl_running
 
 # count tests
 test_num=`ls -l "$TESTS_DIR"/test_* | wc -l`
+disabled_num=`ls -l "$TESTS_DIR"/disabled_test_* | wc -l`
+manual_num=`ls -l "$TESTS_DIR"/manual_test_* | wc -l`
 
 echo
 echo "Running VPP lite test suite."
@@ -123,6 +125,16 @@ else
   done
 fi
 
+echo
+if [ $disabled_num -ne 0 ] ; then
+  echo "Skipped tests: " $disabled_num
+fi
+
+if [ $manual_num -ne 0 ] ; then
+  echo "Manual tests: " $manual_num
+fi
+
+echo
 echo "------------------------------------------------------"
 
 ### end script
