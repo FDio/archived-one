@@ -52,12 +52,15 @@ class RepeatableLocators(SimpleMapping):
 
 SimpleMapping('lisp_state', 'lisp', 'lisp_enable_disable')
 SimpleMapping('lisp_map_resolver', 'lisp map-resolver', 'lisp_add_del_map_resolver')
+SimpleMapping('lisp_map_server', 'lisp map-server', 'lisp_add_del_map_server')
 SimpleMapping('lisp_local_eid', 'lisp eid-table', 'lisp_add_del_local_eid')
 SimpleMapping('lisp_remote_mapping', 'lisp remote-mapping', 'lisp_add_del_remote_mapping')
 SimpleMapping('lisp_pitr', 'lisp pitr ls', 'lisp_pitr_set_locator_set locator-set')
 SimpleMapping('lisp_adjacency', 'lisp adjacency', 'lisp_add_del_adjacency')
 SimpleMapping('lisp_map_request_mode', 'lisp map-request mode', 'lisp_map_request_mode')
 SimpleMapping('set_if_ip', 'set int ip address', 'sw_interface_add_del_address')
+SimpleMapping('lisp_rloc_probe_state', 'lisp rloc-probe', 'lisp_rloc_probe_enable_disable')
+SimpleMapping('lisp_map_register_state', 'lisp map-register', 'lisp_map_register_enable_disable')
 
 CustomMapping('lisp_eid_map_bd',
               'lisp eid-table map vni {0} bd {1}',
