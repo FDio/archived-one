@@ -60,6 +60,50 @@ function test_src_dst_overwrite
 
   # Replace ODL mapping with negative one
   post_curl "add-mapping" "replace1.json"
+
+  # wait for SMR being resolved
+  sleep 2
+
+  maybe_pause
+
+  # now ping should fail
+  send_ping_from_ns_expect_failure vppns1 ${1} ${2}
+
+  maybe_pause
+
+  # Replace ODL mapping with positive one
+  post_curl "add-mapping" "replace2.json"
+
+  # wait for SMR being resolved
+  sleep 2
+
+  maybe_pause
+
+  # expect ping reply again
+  send_ping_from_ns vppns1 ${1} ${2}
+  rc=$?
+
+  maybe_pause
+  2_node_topo_clean
+  print_status $rc "No ICMP response!"
+  exit $test_result
+}
+
+function test_src_dst_overwrite_superset
+{
+  2_node_topo_setup
+
+  maybe_pause
+
+  test_result=1
+
+  # send ping request
+  send_ping_from_ns vppns1 ${1} ${2}
+
+  maybe_pause
+
+  # Replace ODL mapping with negative one
+  post_curl "add-mapping" "replace1.json"
   remove_sd_mapping "6.0.1.0/24" "6.0.2.0/24"
 
   # wait for SMR being resolved
@@ -87,6 +131,6 @@ function test_src_dst_overwrite
 
   maybe_pause
   2_node_topo_clean
-  print_status $rc "No ICM response!"
+  print_status $rc "No ICMP response!"
   exit $test_result
 }
