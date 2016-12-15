@@ -7,4 +7,4 @@ ODL_CONFIG_DIR=`pwd`/../configs/odl/sd/overwrite_superset/4o4
 
 source test_driver/src_dst_overwrite.sh
 
-test_src_dst_overwrite ping "6.0.2.2"
+test_src_dst_overwrite_superset ping "6.0.2.2"
