@@ -26,7 +26,7 @@ if [ ! -f "${VPP_API_TEST}" ] ; then
   echo "$ make build-vat"
   echo "VPP_API_TEST can be set in config.sh or in ~/.onerc."
   echo "Current value:"
-  echo "VPP_LITE_BIN=${VPP_API_TEST}"
+  echo "VPP_API_TEST=${VPP_API_TEST}"
   exit 1
 fi
 

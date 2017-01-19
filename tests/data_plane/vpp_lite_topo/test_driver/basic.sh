@@ -64,6 +64,12 @@ function test_basic_map_register
   ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
   rc=$?
 
+  count=`echo "show error" | nc 0 5002 | grep 'map-notifies received' | awk '{print $1}'`
+  if [ "$count" -eq 0 ] ; then
+    echo "no map-notifies received! ($count)"
+    rc=1
+  fi
+
   maybe_pause
 
   # test done
@@ -83,12 +89,24 @@ function test_rloc_probe
   rc=$?
   assert_rc_ok $rc 2_node_topo_clean "No ICMP response!"
 
-  read -p  "Please check RLOC probe messages manually .." -n1
+  sleep 65
+
+  count=`echo "show error" | nc 0 5002 | grep 'rloc-probe replies received' | awk '{print $1}'`
+  if [ "$count" != "1" ] ; then
+    echo "rloc-probe replies received is not 1! ($count)"
+    rc=1
+  fi
+
+  count=`echo "show error" | nc 0 5003 | grep 'rloc-probe requests received' | awk '{print $1}'`
+  if [ "$count" != "1" ] ; then
+    echo "rloc-probe requests received is not 1! ($count)"
+    rc=1
+  fi
 
   # test done
 
   maybe_pause
   2_node_topo_clean
-  print_status $rc "No ICMP response!"
+  print_status $rc "unexpected value"
   exit $test_result
 }
