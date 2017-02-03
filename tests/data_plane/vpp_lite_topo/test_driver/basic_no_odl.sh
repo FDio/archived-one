@@ -63,3 +63,24 @@ function test_basic_no_odl
   exit $test_result
 }
 
+function test_negative_mapping
+{
+  2_node_topo_setup no_odl
+  maybe_pause
+
+  test_result=1
+
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  rc=$?
+
+  # test done
+  2_node_topo_clean no_odl
+  if [ $rc -eq 0 ] ; then
+    echo "Test failed!"
+  else
+    echo "Test passed."
+    test_result=0
+  fi
+
+  exit $test_result
+}
