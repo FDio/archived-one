@@ -59,7 +59,7 @@ function test_src_dst
 
   maybe_pause
   3_node_star_topo_clean
-  print_status $rc "No ICM response!"
+  print_status $rc "No ICMP response!"
   exit $test_result
 }
 
@@ -96,7 +96,7 @@ function test_src_dst_l2
 
   maybe_pause
   3_node_star_topo_clean
-  print_status $rc "No ICM response!"
+  print_status $rc "No ICMP response!"
   exit $test_result
 }
 
@@ -123,13 +123,19 @@ function test_mapping_timers
 
   mapping_exists "vpp1" "6.0.1.0/24|6.0.2.0/24"
   assert_rc_ok $? 3_node_star_topo_clean "mapping not in map-cache!"
+  mapping_exists "vpp1" "6.0.5.0/24|6.0.2.0/24"
+  assert_rc_ok $? 3_node_star_topo_clean "mapping not in map-cache!"
   mapping_exists "vpp2" "6.0.1.0/24"
   assert_rc_ok $? 3_node_star_topo_clean "mapping not in map-cache!"
 
   # sleep enough so the mapping expires
   sleep 65
 
+  maybe_pause
+
   mapping_exists "vpp1" "6.0.1.0/24|6.0.2.0/24"
+  assert_rc_not_ok $? 3_node_star_topo_clean "mapping still present in map-cache!"
+  mapping_exists "vpp1" "6.0.5.0/24|6.0.2.0/24"
   assert_rc_not_ok $? 3_node_star_topo_clean "mapping still present in map-cache!"
   mapping_exists "vpp2" "6.0.1.0/24"
   assert_rc_not_ok $? 3_node_star_topo_clean "mapping still present in map-cache!"
