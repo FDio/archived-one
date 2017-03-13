@@ -4,9 +4,9 @@ ODL_IP="127.0.0.1"
 ODL_PORT="8181"
 
 # path to vpp executable
-VPP_LITE_DIR=/vpp/build-root/install-vpp_lite_debug-native/vpp/bin
+VPP_LITE_DIR=/vpp/build-root/install-vpp_debug-native/vpp/bin
 VPP_LITE_BIN=${VPP_LITE_DIR}/vpp
-VPP_API_TEST=/vpp/build-root/install-vpp_lite_debug-native/vpp-api-test/bin/vpp_api_test
+VPP_API_TEST=/vpp/build-root/install-vpp_debug-native/vpp-api-test/bin/vpp_api_test
 
 # read user config file if exists
 if [ -f "${HOME}/.onerc" ] ; then
@@ -117,6 +117,7 @@ function start_vpp
            full-coredump             \
            cli-listen localhost:$1 } \
     api-trace { on } api-segment { prefix "$2" }
+    plugins { plugin dpdk_plugin.so { disable } }
 }
 
 function print_status
