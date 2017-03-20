@@ -29,7 +29,7 @@ def verify_mapping(vat_exec, prefix, mapping, vat_path):
 
 if __name__ == "__main__":
   if len(sys.argv) < 4:
-    raise Exception('expecteds 4 parameters: VAT executable, shared prefix '
+    raise Exception('expected 4 parameters: VAT executable, shared prefix '
         + ' name, mapping expected, path to vat templates!')
 
   if verify_mapping(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]):

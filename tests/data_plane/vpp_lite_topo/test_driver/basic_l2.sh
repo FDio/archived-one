@@ -36,3 +36,25 @@ function test_basic
   print_status $rc "No ICM response!"
   exit $test_result
 }
+
+function test_single_icmp
+{
+  if [ "$3" != "no_setup" ] ; then
+    basic_topo_setup no_odl
+  fi
+
+  maybe_pause
+  test_result=1
+
+  ip netns exec vppns1 "${1}" -c 1 "${2}"
+  rc=$?
+
+  check_counters "vpp1" "10" $3   $4   $5   $6   $7   $8
+  assert_rc_ok $? "basic_topo_clean no_odl" "Counters do not match!"
+
+  # test done
+  maybe_pause
+  basic_topo_clean no_odl
+  print_status $rc "No ICM response!"
+  exit $test_result
+}

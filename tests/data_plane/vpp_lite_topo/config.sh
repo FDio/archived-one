@@ -158,3 +158,9 @@ function start_map_resolver
   python scripts/dummy_mr.py "$1" 4342 &
   mr_id=$!
 }
+
+function check_counters
+{
+  python scripts/vat/check_counters.py ${VPP_API_TEST} ${VAT_TEMPLATES} "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"
+}
+

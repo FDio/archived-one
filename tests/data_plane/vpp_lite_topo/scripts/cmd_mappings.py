@@ -61,6 +61,7 @@ SimpleMapping('lisp_map_request_mode', 'lisp map-request mode', 'lisp_map_reques
 SimpleMapping('set_if_ip', 'set int ip address', 'sw_interface_add_del_address')
 SimpleMapping('lisp_rloc_probe_state', 'lisp rloc-probe', 'lisp_rloc_probe_enable_disable')
 SimpleMapping('lisp_map_register_state', 'lisp map-register', 'lisp_map_register_enable_disable')
+SimpleMapping('lisp_stats', 'one statistics', 'one_stats_enable_disable')
 
 CustomMapping('lisp_eid_map_bd',
               'lisp eid-table map vni {0} bd {1}',
