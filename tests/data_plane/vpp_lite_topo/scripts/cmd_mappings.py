@@ -50,32 +50,32 @@ class RepeatableLocators(SimpleMapping):
     return s
 
 
-SimpleMapping('lisp_state', 'lisp', 'lisp_enable_disable')
-SimpleMapping('lisp_map_resolver', 'lisp map-resolver', 'lisp_add_del_map_resolver')
-SimpleMapping('lisp_map_server', 'lisp map-server', 'lisp_add_del_map_server')
-SimpleMapping('lisp_local_eid', 'lisp eid-table', 'lisp_add_del_local_eid')
-SimpleMapping('lisp_remote_mapping', 'lisp remote-mapping', 'lisp_add_del_remote_mapping')
-SimpleMapping('lisp_pitr', 'lisp pitr ls', 'lisp_pitr_set_locator_set locator-set')
-SimpleMapping('lisp_adjacency', 'lisp adjacency', 'lisp_add_del_adjacency')
-SimpleMapping('lisp_map_request_mode', 'lisp map-request mode', 'lisp_map_request_mode')
+SimpleMapping('lisp_state', 'one', 'one_enable_disable')
+SimpleMapping('lisp_map_resolver', 'one map-resolver', 'one_add_del_map_resolver')
+SimpleMapping('lisp_map_server', 'one map-server', 'one_add_del_map_server')
+SimpleMapping('lisp_local_eid', 'one eid-table', 'one_add_del_local_eid')
+SimpleMapping('lisp_remote_mapping', 'one remote-mapping', 'one_add_del_remote_mapping')
+SimpleMapping('lisp_pitr', 'one pitr ls', 'one_pitr_set_locator_set locator-set')
+SimpleMapping('lisp_adjacency', 'one adjacency', 'one_add_del_adjacency')
+SimpleMapping('lisp_map_request_mode', 'one map-request mode', 'one_map_request_mode')
 SimpleMapping('set_if_ip', 'set int ip address', 'sw_interface_add_del_address')
-SimpleMapping('lisp_rloc_probe_state', 'lisp rloc-probe', 'lisp_rloc_probe_enable_disable')
-SimpleMapping('lisp_map_register_state', 'lisp map-register', 'lisp_map_register_enable_disable')
+SimpleMapping('lisp_rloc_probe_state', 'one rloc-probe', 'one_rloc_probe_enable_disable')
+SimpleMapping('lisp_map_register_state', 'one map-register', 'one_map_register_enable_disable')
 SimpleMapping('lisp_stats', 'one statistics', 'one_stats_enable_disable')
 
 CustomMapping('lisp_eid_map_bd',
-              'lisp eid-table map vni {0} bd {1}',
-              'lisp_eid_table_add_del_map vni {0} bd_index {1}')
+              'one eid-table map vni {0} bd {1}',
+              'one_eid_table_add_del_map vni {0} bd_index {1}')
 CustomMapping('lisp_eid_map_vrf',
-              'lisp eid-table map vni {0} vrf {1}',
-              'lisp_eid_table_add_del_map vni {0} vrf {1}')
+              'one eid-table map vni {0} vrf {1}',
+              'one_eid_table_add_del_map vni {0} vrf {1}')
 CustomMapping('set_if_l2_bridge', 'set interface l2 bridge {0} {1}',
               'sw_interface_set_l2_bridge {0} bd_id {1}')
 CustomMapping('set_if_ip_table', 'set interface ip table {0} {1}',
               'sw_interface_set_table {0} vrf {1}')
 CustomMapping('lisp_locator_set_with_locator',
-              'lisp locator-set add {0} iface {1} p {2} w {3}',
-              'lisp_add_del_locator_set locator-set {0} iface {1} p {2} w {3}')
+              'one locator-set add {0} iface {1} p {2} w {3}',
+              'one_add_del_locator_set locator-set {0} iface {1} p {2} w {3}')
 CustomMapping('create_host_iface',
     'create host-interface name {0}\n'
     'set int state host-{0} up\n'
@@ -108,6 +108,6 @@ CustomMapping('create_host_iface_vrf_v6',
     'sw_interface_add_del_address host-{0} {1}')
 
 RepeatableLocators('lisp_ls_multiple_locs',
-                   'lisp locator-set add',
-                   'lisp_add_del_locator_set locator-set')
+                   'one locator-set add',
+                   'one_add_del_locator_set locator-set')
 

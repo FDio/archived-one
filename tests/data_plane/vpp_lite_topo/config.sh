@@ -117,7 +117,6 @@ function start_vpp
            full-coredump             \
            cli-listen localhost:$1 } \
     api-trace { on } api-segment { prefix "$2" }
-    plugins { plugin dpdk_plugin.so { disable } }
 }
 
 function print_status
