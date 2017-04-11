@@ -110,3 +110,45 @@ function test_rloc_probe
   print_status $rc "unexpected value"
   exit $test_result
 }
+
+function test_enable_disable
+{
+  if [ "$3" != "no_setup" ] ; then
+    2_node_topo_setup
+  fi
+
+  maybe_pause
+  test_result=1
+
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  assert_rc_ok $? 2_node_topo_clean "No ICMP response!"
+
+  maybe_pause
+
+  # disable control plane
+  echo "one disable" | nc 0 5002
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  assert_rc_not_ok $? 2_node_topo_clean "Nothing expected, but received ICMP reply!"
+
+  # enable control plane
+  echo "one enable" | nc 0 5002
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  assert_rc_ok $? 2_node_topo_clean "No ICMP response!"
+
+  # disable dataplane
+  echo "gpe disable" | nc 0 5002
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  assert_rc_not_ok $? 2_node_topo_clean "Nothing expected, but received ICMP reply!"
+
+  # enable LISP again from control plane
+  echo "one enable" | nc 0 5002
+  ip netns exec vppns1 "${1}" -w 15 -c 1 "${2}"
+  assert_rc_ok $? 2_node_topo_clean "No ICMP response!"
+  rc=$?
+
+  # test done
+  maybe_pause
+  2_node_topo_clean
+  print_status $rc "No ICMP response!"
+  exit $test_result
+}
