@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+function set_arp
+{
+  odl_mac1=`ip a show dev odl_vpp1 | grep "link/ether" | awk '{print $2}'`
+  echo "set ip arp host-vpp1_rtr 6.0.3.100 $odl_mac1" | nc 0 5002
+
+  odl_mac2=`ip a show dev odl_vpp2 | grep "link/ether" | awk '{print $2}'`
+  echo "set ip arp host-vpp2_rtr 6.0.3.100 $odl_mac1" | nc 0 5003
+
+  mac=`echo "sh hard host-rtr_vpp1" | nc 0 5004 | grep 'Ethernet address' | awk '{print $3}'`
+  echo "set ip arp host-vpp1_rtr 6.0.3.2 $mac" | nc 0 5002
+
+  mac=`echo "sh hard host-vpp2_rtr" | nc 0 5003 | grep 'Ethernet address' | awk '{print $3}'`
+  echo "set ip arp host-rtr_vpp2 6.0.5.1 $mac" | nc 0 5004
+}
+
 function rtr_two_iface_clean {
   echo "Clearing all VPP instances.."
   pkill vpp --signal 9
@@ -136,4 +151,6 @@ function rtr_two_iface_setup {
   fi
   post_curl "add-mapping" ${ODL_CONFIG_FILE1}
   post_curl "add-mapping" ${ODL_CONFIG_FILE2}
+
+  set_arp
 }

@@ -18,6 +18,11 @@
 
 function set_arp
 {
+  odl_mac=`ip a show dev odl | grep "link/ether" | awk '{print $2}'`
+  echo "set ip arp host-xtr1 6.0.3.100 $odl_mac" | nc 0 5002
+  echo "set ip arp host-xtr2 6.0.3.100 $odl_mac" | nc 0 5003
+  echo "set ip arp host-xtr3 6.0.3.100 $odl_mac" | nc 0 5004
+
   mac=`ip netns exec vppns1 ip a show dev veth_vpp1  | grep "link/ether" | awk '{print $2}'`
   echo "set ip arp host-vpp1 6.0.1.2 $mac" | nc 0 5002
   echo "set ip6 neighbor host-vpp1 6:0:1::2 $mac" | nc 0 5002

@@ -65,6 +65,11 @@ function 3_node_star_topo_clean
 
 function set_arp
 {
+  odl_mac=`ip a show dev odl | grep "link/ether" | awk '{print $2}'`
+  echo "set ip arp host-xtr1 6.0.3.100 $odl_mac" | nc 0 5002
+  echo "set ip arp host-xtr2 6.0.3.100 $odl_mac" | nc 0 5003
+  echo "set ip arp host-xtr3 6.0.3.100 $odl_mac" | nc 0 5004
+
   mac1=`ip netns exec vpp-ns5 ip a show dev veth_vpp5  | grep "link/ether" | awk '{print $2}'`
   ip netns exec vpp-ns6 arp -s 6.0.10.21 $mac1
 
