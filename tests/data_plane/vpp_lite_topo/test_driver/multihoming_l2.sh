@@ -39,10 +39,10 @@ function test_multihoming
   maybe_pause $3
 
   # do some port sweeping to see that load balancing works
-  ip netns exec vppns1 nc -n -z "${2}" 1-1000 > /dev/null 2>&1
+  ip netns exec vppns1 python scripts/port_flood.py "${2}" 1000
 
   # check that it works
-  pkts=$(echo "show int" | nc 0 5002 | grep host-intervpp11 | awk '{print $6}' | tr -d '\r')
+  pkts=$(echo "show int" | nc 0 5003 | grep host-intervpp12 | awk '{print $6}' | tr -d '\r')
 
   if [ $pkts -gt 450 ] && [ $pkts -lt 550 ] ; then
     rc=0
