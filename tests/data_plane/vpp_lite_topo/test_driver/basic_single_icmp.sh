@@ -31,3 +31,20 @@ function test_single_icmp
   print_status $rc "No ICMP response!"
   exit $test_result
 }
+
+function test_single_icmp_no_counters
+{
+  2_node_topo_setup no_odl
+  maybe_pause
+  test_result=1
+
+  # send only one ping request
+  ip netns exec vppns1 "${1}" -c 1 "${2}"
+  rc=$?
+
+  # test done
+  maybe_pause
+  2_node_topo_clean no_odl
+  print_status $rc "No ICMP response!"
+  exit $test_result
+}

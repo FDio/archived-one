@@ -63,6 +63,11 @@ SimpleMapping('lisp_rloc_probe_state', 'one rloc-probe', 'one_rloc_probe_enable_
 SimpleMapping('lisp_map_register_state', 'one map-register', 'one_map_register_enable_disable')
 SimpleMapping('lisp_stats', 'one statistics', 'one_stats_enable_disable')
 
+SimpleMapping('ipsec_sad_add_del_entry', 'TODO', 'ipsec_sad_add_del_entry')
+SimpleMapping('ipsec_spd_add_del', 'todo', 'ipsec_spd_add_del')
+SimpleMapping('ipsec_interface_add_del_spd' , 'todo', 'ipsec_interface_add_del_spd')
+SimpleMapping('ipsec_spd_add_del_entry', 'todo', 'ipsec_spd_add_del_entry')
+
 CustomMapping('lisp_eid_map_bd',
               'one eid-table map vni {0} bd {1}',
               'one_eid_table_add_del_map vni {0} bd_index {1}')
