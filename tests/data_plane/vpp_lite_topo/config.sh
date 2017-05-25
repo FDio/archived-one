@@ -116,7 +116,8 @@ function start_vpp
     unix { log /tmp/$2.log           \
            full-coredump             \
            cli-listen localhost:$1 } \
-    api-trace { on } api-segment { prefix "$2" }
+    api-trace { on } api-segment { prefix "$2" } \
+    plugins { plugin dpdk_plugin.so { disable } }
 }
 
 function print_status

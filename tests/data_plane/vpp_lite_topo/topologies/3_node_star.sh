@@ -60,7 +60,9 @@ function 3_node_star_topo_clean
   ip netns del vpp-ns8 &> /dev/null
   ip netns del xtr-ns &> /dev/null
 
-  odl_clear_all
+  if [ "$1" != "no_odl" ] ; then
+    odl_clear_all
+  fi
 }
 
 function set_arp
@@ -238,8 +240,12 @@ maybe_pause
     echo "==="
   fi
 
-  post_curl "add-mapping" ${ODL_CONFIG_FILE1}
-  post_curl "add-mapping" ${ODL_CONFIG_FILE2}
+  if [ "$1" != "no_odl" ] ; then
+    post_curl "add-mapping" ${ODL_CONFIG_FILE1}
+    post_curl "add-mapping" ${ODL_CONFIG_FILE2}
+  fi
 
-  set_arp
+  if [ "$2" != "no_arp" ] ; then
+    set_arp
+  fi
 }
