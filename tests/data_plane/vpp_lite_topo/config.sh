@@ -7,6 +7,7 @@ ODL_PORT="8181"
 VPP_LITE_DIR=/vpp/build-root/install-vpp_debug-native/vpp/bin
 VPP_LITE_BIN=${VPP_LITE_DIR}/vpp
 VPP_API_TEST=/vpp/build-root/install-vpp_debug-native/vpp-api-test/bin/vpp_api_test
+ONE_ROOT=/vpp/one
 
 # read user config file if exists
 if [ -f "${HOME}/.onerc" ] ; then
