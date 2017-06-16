@@ -15,29 +15,10 @@ if [[ $(id -u) != 0 ]]; then
   exit 1
 fi
 
-function send_nsh_packet_from_namespace
-{
-  ns=$1
-  dst=$2
-  spi=$3
-  si=$4
-  itr_mac=$5
-  src_mac=$6
-
-  ip netns exec $ns python scripts/send_nsh_packet.py $dst $itr_mac $spi $si $src_mac
-}
-
 function test_nsh
 {
-  dst=$1
-  spi=$2
-  si=$3
-
   2_node_topo_setup
   rc=1
-
-  src_mac=`ip netns exec vppns1 ip a show dev veth_vpp1  | grep "link/ether" | awk '{print $2}'`
-  itr_mac=`echo "sh hard host-vpp1" | nc 0 5002 | grep 'Ethernet address' | awk '{print $3}'`
 
   maybe_pause
 
@@ -54,7 +35,6 @@ packet-generator new {
   interface pg0
   pcap ${ONE_ROOT}/tests/data_plane/vpp_lite_topo/scripts/nsh.pcap
 }
-
 EOF
 
   echo "trace add af-packet-input 100" | nc 0 5002

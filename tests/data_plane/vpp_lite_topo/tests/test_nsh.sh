@@ -5,5 +5,4 @@ ODL_CONFIG_DIR=`pwd`/../configs/odl/nsh
 
 source test_driver/nsh.sh
 
-# args: dest IP, service path ID, service index
-test_nsh "6.0.2.2" 10 200
+test_nsh
