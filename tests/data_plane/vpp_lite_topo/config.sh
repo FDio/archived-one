@@ -7,6 +7,7 @@ ODL_PORT="8181"
 VPP_LITE_DIR=/vpp/build-root/install-vpp_debug-native/vpp/bin
 VPP_LITE_BIN=${VPP_LITE_DIR}/vpp
 VPP_API_TEST=/vpp/build-root/install-vpp_debug-native/vpp-api-test/bin/vpp_api_test
+VPP_PLUGIN_DIR=${VPP_LITE_DIR}/../lib64/vpp_plugins
 ONE_ROOT=/vpp/one
 
 # read user config file if exists
@@ -118,7 +119,8 @@ function start_vpp
            full-coredump             \
            cli-listen localhost:$1 } \
     api-trace { on } api-segment { prefix "$2" } \
-    plugins { plugin dpdk_plugin.so { disable } }
+    plugins { plugin dpdk_plugin.so { disable } } \
+    plugin_path ${VPP_PLUGIN_DIR}
 }
 
 function print_status
