@@ -162,6 +162,13 @@ function start_map_resolver
   mr_id=$!
 }
 
+function start_map_server
+{
+  echo "starting dummy map server on interface $1"
+  python scripts/dummy_map_server.py "$1" 4342 &
+  ms_id=$!
+}
+
 function check_counters
 {
   python scripts/vat/check_counters.py ${VPP_API_TEST} ${VAT_TEMPLATES} "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"

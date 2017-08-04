@@ -47,6 +47,39 @@ function test_basic
   exit $test_result
 }
 
+function test_basic_map_register_fallback
+{
+  2_node_topo_setup no_odl
+
+  maybe_pause
+
+  test_result=1
+
+  start_map_server "6.0.3.200"
+
+  wait_for_map_register=20
+  echo "Waiting for map registration $wait_for_map_register seconds .."
+  sleep $wait_for_map_register
+
+  rc=1
+
+  count="`echo "show error" | nc 0 5002 | grep 'map-notifies received' | awk '{print $1}'`"
+  if [ "$count" != "" ] ; then
+    if [ $count -gt 0 ] ; then
+      echo "no map-notifies received! ($count)"
+      rc=0 # test passed
+    fi
+  fi
+
+  maybe_pause
+  kill $ms_id
+
+  # test done
+  2_node_topo_clean no_odl
+  print_status $rc "map server fallback does not work!"
+  exit $test_result
+}
+
 function test_basic_map_register
 {
   2_node_topo_setup no_odl
