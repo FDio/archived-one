@@ -63,6 +63,7 @@ SimpleMapping('lisp_rloc_probe_state', 'one rloc-probe', 'one_rloc_probe_enable_
 SimpleMapping('lisp_map_register_state', 'one map-register', 'one_map_register_enable_disable')
 SimpleMapping('lisp_stats', 'one statistics', 'one_stats_enable_disable')
 SimpleMapping('lisp_l2_arp', 'one l2 arp', 'one_add_del_l2_arp_entry')
+SimpleMapping('lisp_ndp_entry', 'one ndp', 'one_add_del_ndp_entry')
 SimpleMapping('lisp_nsh_set_ls', 'one nsh-mapping', 'one_nsh_set_locator_set')
 
 SimpleMapping('ipsec_sad_add_del_entry', 'TODO', 'ipsec_sad_add_del_entry')

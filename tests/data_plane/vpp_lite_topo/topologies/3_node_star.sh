@@ -17,12 +17,13 @@
 #                    +             |        |          + 6.0.10.22
 #                6.0.10.21         |  VPP3  |             08:22:22:22:22:22
 #            08:11:11:11:11:11     |        |
-#                                  +-+----+-+
+#             6:0:10::21           +-+----+-+
 #                                vpp6|    |vpp4
 #                                    |    |
 #                                    |    +6.0.2.2
 #                                    +     6:0:2::2
 #                             6.0.10.22
+#                             6:0:10::22
 #                             08:22:22:22:22:22
 #
 
@@ -177,6 +178,7 @@ function 3_node_star_topo_setup
     bash -c "
       ip link set dev lo up
       ip addr add 6.0.10.21/24 dev veth_vpp5
+      ip addr add 6:0:10::21/64 dev veth_vpp5
   "
 
   ip link add veth_vpp6 type veth peer name vpp6
@@ -188,6 +190,7 @@ function 3_node_star_topo_setup
     bash -c "
       ip link set dev lo up
       ip addr add 6.0.10.22/24 dev veth_vpp6
+      ip addr add 6:0:10::22/64 dev veth_vpp6
   "
 
   ip link add veth_vpp7 type veth peer name vpp7
@@ -225,6 +228,7 @@ maybe_pause
 
   echo "* Selected configuration method: $CFG_METHOD"
   if [ "$CFG_METHOD" == "cli" ] ; then
+    sleep 1
     echo "exec ${VPP_LITE_CONF}/vpp1.cli" | nc 0 5002
     echo "exec ${VPP_LITE_CONF}/vpp2.cli" | nc 0 5003
     echo "exec ${VPP_LITE_CONF}/vpp3.cli" | nc 0 5004
