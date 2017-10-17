@@ -88,6 +88,7 @@ do
   # run the test case
   base_name=`basename -a "$test_case"`
   printf "*** %2d/%d : %-48s" $count $test_num "$base_name"
+  logger "*** test start $base_name"
 
   if [ $verbose -ne 0 ] ; then
     "$test_case"
@@ -104,6 +105,7 @@ do
     printf "passed.\n"
     let "passed_num=$passed_num + 1"
   fi
+  logger "*** test end $base_name: result: $rc"
   sleep 1
 done
 

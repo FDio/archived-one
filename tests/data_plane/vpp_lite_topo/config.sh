@@ -120,7 +120,7 @@ function start_vpp
            cli-listen localhost:$1 } \
     api-trace { on } api-segment { prefix "$2" } \
     plugins { plugin dpdk_plugin.so { disable } } \
-    plugin_path ${VPP_PLUGIN_DIR}
+    plugin_path ${VPP_PLUGIN_DIR} 2> /dev/null
 }
 
 function print_status

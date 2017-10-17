@@ -40,14 +40,18 @@ EOF
   echo "trace add af-packet-input 100" | nc 0 5002
   echo "trace add af-packet-input 100" | nc 0 5003
   echo "exec ${ONE_ROOT}/tests/data_plane/vpp_lite_topo/scripts/lisp_nsh" | nc 0 5002
-  echo "packet-generator enable-stream nsh1" | nc 0 5002
 
   # add dummy node to ETR
   echo "test one nsh add-dummy-decap-node" | nc 0 5003
 
+  echo "packet-generator enable-stream nsh1" | nc 0 5002
+
+  echo "enabling stream"
+  sleep 1
   # inject NSH packet to ITR
   echo "test one nsh pcap ${ONE_ROOT}/tests/data_plane/vpp_lite_topo/scripts/nsh.pcap" | nc 0 5002
 
+  sleep 1
   # check decap stats
   decap_stats="`echo "show errors" | nc 0 5003 | grep "lisp gpe dummy nsh decap" | awk '{print $1}'`"
 
@@ -58,5 +62,5 @@ EOF
   maybe_pause
   2_node_topo_clean
   print_status $rc "NSH test failed!"
-  exit $test_result
+  exit $rc
 }
