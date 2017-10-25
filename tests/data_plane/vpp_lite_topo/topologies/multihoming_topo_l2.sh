@@ -117,11 +117,11 @@ function multihoming_topo_setup
   start_vpp 5003 vpp2
 
   echo "* Selected configuration method: $CFG_METHOD"
+  sleep 2
   if [ "$CFG_METHOD" == "cli" ] ; then
     echo "exec ${VPP_LITE_CONF}/vpp1.cli" | nc 0 5002
     echo "exec ${VPP_LITE_CONF}/vpp2.cli" | nc 0 5003
   elif [ "$CFG_METHOD" == "vat" ] ; then
-    sleep 2
     ${VPP_API_TEST} chroot prefix vpp1 script in ${VPP_LITE_CONF}/vpp1.vat
     ${VPP_API_TEST} chroot prefix vpp2 script in ${VPP_LITE_CONF}/vpp2.vat
   else
